@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Maro | Premium Digital Store</title>
     
-    <!-- سياسة الأمان CSP (تمنع حقن سكريبتات خارجية ضارة) -->
+    <!-- سياسة الأمان CSP -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://api.telegram.org;">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,15 +28,14 @@
             color: #fff;
             overflow-x: hidden;
             
-            /* حماية متقدمة لمنع تحديد النص والنسخ على الآيفون والكمبيوتر */
+            /* حماية متقدمة لمنع تحديد النص والنسخ */
             -webkit-user-select: none; 
-            -webkit-touch-callout: none; /* السطر السحري لمنع قائمة النسخ في الآيفون */
+            -webkit-touch-callout: none; 
             -moz-user-select: none;
             -ms-user-select: none;
             user-select: none;
         }
 
-        /* حماية إضافية للصور من السحب */
         img { pointer-events: none; }
 
         .bg-grid-glow {
@@ -157,7 +156,7 @@
         <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
             <div class="text-center md:text-right">
                 <div class="inline-block px-4 py-1.5 rounded-full glass-panel text-indigo-400 text-sm font-bold mb-6 border-indigo-500/30">
-                    <i class="fa-solid fa-fire text-orange-500 mr-1"></i> أفضل المتاجر الرقمية لعام 2024
+                    <i class="fa-solid fa-fire text-orange-500 mr-1"></i> متجرك الرقمي الأول
                 </div>
                 <h1 class="text-5xl md:text-7xl font-black leading-tight mb-6">
                     ارتقِ بمستوى <br>
@@ -196,7 +195,6 @@
 
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 
-                <!-- كارت 1 -->
                 <div class="tilt-card glass-panel rounded-2xl p-6 relative group cursor-pointer" onmousemove="handleTilt(event, this)" onmouseleave="resetTilt(this)" onclick="addToCart('تطبيقات الدردشة')">
                     <div class="w-14 h-14 rounded-xl card-icon flex items-center justify-center text-2xl text-indigo-400 mb-6 relative z-10">
                         <i class="fa-solid fa-comments"></i>
@@ -209,7 +207,6 @@
                     </div>
                 </div>
 
-                <!-- كارت 2 -->
                 <div class="tilt-card glass-panel rounded-2xl p-6 relative group cursor-pointer" onmousemove="handleTilt(event, this)" onmouseleave="resetTilt(this)" onclick="addToCart('باقات الألعاب')">
                     <div class="w-14 h-14 rounded-xl card-icon flex items-center justify-center text-2xl text-pink-400 mb-6 relative z-10">
                         <i class="fa-solid fa-gamepad"></i>
@@ -222,7 +219,6 @@
                     </div>
                 </div>
 
-                <!-- كارت 3 -->
                 <div class="tilt-card glass-panel rounded-2xl p-6 relative group cursor-pointer" onmousemove="handleTilt(event, this)" onmouseleave="resetTilt(this)" onclick="addToCart('الاشتراكات')">
                     <div class="w-14 h-14 rounded-xl card-icon flex items-center justify-center text-2xl text-red-500 mb-6 relative z-10">
                         <i class="fa-solid fa-play"></i>
@@ -235,7 +231,6 @@
                     </div>
                 </div>
 
-                <!-- كارت 4 -->
                 <div class="tilt-card glass-panel rounded-2xl p-6 relative group cursor-pointer" onmousemove="handleTilt(event, this)" onmouseleave="resetTilt(this)" onclick="addToCart('الدفع الإلكتروني')">
                     <div class="w-14 h-14 rounded-xl card-icon flex items-center justify-center text-2xl text-emerald-400 mb-6 relative z-10">
                         <i class="fa-solid fa-wallet"></i>
@@ -302,20 +297,20 @@
             <div class="text-center text-gray-500 mt-10">السلة فارغة حالياً</div>
         </div>
         <div class="p-6 border-t border-white/10 bg-white/5">
-            <button onclick="checkout()" class="w-full btn-neon py-4 rounded-xl font-bold text-lg mb-2">إتمام الطلب</button>
-            <p class="text-center text-xs text-gray-500">سيتم تحويلك للتليجرام لإكمال الدفع</p>
+            <!-- غيرنا اسم الزرار -->
+            <button onclick="checkout()" class="w-full btn-neon py-4 rounded-xl font-bold text-lg mb-2">إرسال الطلب عبر تليجرام</button>
+            <p class="text-center text-xs text-gray-500">سيتم تحويلك للتليجرام لتأكيد الطلب والدفع</p>
         </div>
     </div>
 
     <script>
-        // حماية من فتح الـ Developer Tools والكليك يمين (تأثير نفسي)
         document.addEventListener('contextmenu', event => event.preventDefault());
         document.onkeydown = function(e) {
-            if(e.keyCode == 123) { return false; } // منع F12
-            if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) { return false; } // منع Ctrl+Shift+I
-            if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) { return false; } // منع Ctrl+Shift+C
-            if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) { return false; } // منع Ctrl+Shift+J
-            if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) { return false; } // منع Ctrl+U (عرض المصدر)
+            if(e.keyCode == 123) { return false; }
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) { return false; }
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) { return false; }
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) { return false; }
+            if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) { return false; }
         }
 
         try {
@@ -349,7 +344,6 @@
                 cartDrawer.classList.toggle('translate-x-full');
             }
 
-            // منع حقن الـ XSS
             function sanitizeInput(str) {
                 const temp = document.createElement('div');
                 temp.textContent = str;
@@ -389,7 +383,7 @@
                     
                     const span = document.createElement('span');
                     span.className = 'font-bold';
-                    span.textContent = item; // آمن
+                    span.textContent = item; 
                     
                     textContainer.appendChild(span);
                     
@@ -409,10 +403,12 @@
                     alert("السلة فارغة! اختر قسم أولاً.");
                     return;
                 }
-                let message = "مرحباً مارو، أريد طلب الخدمات التالية:\n";
+                // رسالة منظمة زي ما الـ AI اقترح
+                let message = "مرحباً Maro Store،\nأريد طلب الخدمات التالية:\n\n";
                 cart.forEach((item, index) => {
-                    message += `- ${item}\n`;
+                    message += `🔹 ${item}\n`;
                 });
+                message += "\nالرجاء تأكيد الطلب وتزويدي بتفاصيل الدفع.";
                 
                 const encodedMessage = encodeURIComponent(message);
                 window.open(`https://t.me/qijub?text=${encodedMessage}`, '_blank', 'noopener,noreferrer');
