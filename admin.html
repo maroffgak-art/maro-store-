@@ -8,11 +8,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style> 
         body { font-family: 'Cairo', sans-serif; background: #0f172a; color: white; } 
-        /* تنسيق القوائم المنسدلة عشان تبان واضحة في الدارك مود */
         select { appearance: none; background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23FFFFFF%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E"); background-repeat: no-repeat; background-position: left 1rem center; background-size: 0.8rem; }
+        .tab-btn.active { background-color: #0ea5e9; color: #000; font-weight: bold; }
     </style>
 </head>
-<body class="p-6">
+<body class="p-4 md:p-8">
 
     <!-- تسجيل الدخول -->
     <div id="login-section" class="max-w-md mx-auto mt-20 bg-slate-800 p-8 rounded-2xl shadow-xl border border-slate-700">
@@ -24,150 +24,132 @@
     </div>
 
     <!-- لوحة التحكم -->
-    <div id="admin-section" class="hidden max-w-5xl mx-auto">
-        <div class="flex justify-between items-center mb-8 border-b border-slate-700 pb-4">
+    <div id="admin-section" class="hidden max-w-6xl mx-auto">
+        <div class="flex flex-col md:flex-row justify-between items-center mb-8 border-b border-slate-700 pb-4 gap-4">
             <h1 class="text-3xl font-black text-cyan-400">لوحة الإدارة</h1>
-            <button onclick="logout()" class="bg-red-500 px-4 py-2 rounded-lg font-bold hover:bg-red-600 transition">تسجيل خروج</button>
-        </div>
-
-        <!-- رسالة نجاح/خطأ -->
-        <div id="alert-box" class="hidden mb-6 p-4 rounded-xl font-bold text-center"></div>
-
-        <!-- إضافة منتج -->
-        <div class="bg-slate-800 p-6 rounded-2xl mb-8 border border-slate-700">
-            <h2 class="text-xl font-bold mb-6 text-white border-b border-slate-600 pb-2">إضافة منتج جديد</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                
-                <!-- اسم المنتج -->
-                <div>
-                    <label class="block text-sm font-bold text-slate-300 mb-2">اسم المنتج</label>
-                    <input type="text" id="app-name" placeholder="مثال: شحن 1000 شدة ببجي" class="w-full p-3 rounded-lg bg-slate-900 border border-slate-700 text-white outline-none focus:border-cyan-400">
-                </div>
-
-                <!-- القسم -->
-                <div>
-                    <label class="block text-sm font-bold text-slate-300 mb-2">القسم</label>
-                    <select id="cat-id" class="w-full p-3 rounded-lg bg-slate-900 border border-slate-700 text-white outline-none focus:border-cyan-400">
-                        <option value="games">الألعاب</option>
-                        <option value="subscriptions">الاشتراكات</option>
-                        <option value="giftcards">البطاقات الرقمية</option>
-                        <option value="creative">التصميم</option>
-                        <option value="software">البرمجيات</option>
-                        <option value="tech">الخدمات التقنية</option>
-                        <option value="finance">الحوالات</option>
-                        <option value="support">خدمات متنوعة</option>
-                    </select>
-                </div>
-
-                <!-- السعر -->
-                <div>
-                    <label class="block text-sm font-bold text-slate-300 mb-2">السعر (بالدولار)</label>
-                    <input type="number" id="app-price" placeholder="مثال: 15" min="0" step="0.01" class="w-full p-3 rounded-lg bg-slate-900 border border-slate-700 text-white outline-none focus:border-cyan-400">
-                </div>
-
-                <!-- طريقة السعر -->
-                <div>
-                    <label class="block text-sm font-bold text-slate-300 mb-2">طريقة عرض السعر</label>
-                    <select id="price-mode" class="w-full p-3 rounded-lg bg-slate-900 border border-slate-700 text-white outline-none focus:border-cyan-400">
-                        <option value="fixed">سعر ثابت</option>
-                        <option value="from">يبدأ من</option>
-                    </select>
-                </div>
-
-                <!-- حالة المنتج -->
-                <div>
-                    <label class="block text-sm font-bold text-slate-300 mb-2">حالة المخزون</label>
-                    <select id="app-status" class="w-full p-3 rounded-lg bg-slate-900 border border-slate-700 text-white outline-none focus:border-cyan-400">
-                        <option value="available">متاح</option>
-                        <option value="limited">كمية محدودة</option>
-                        <option value="out">نفد</option>
-                        <option value="hidden">مخفي</option>
-                    </select>
-                </div>
-
-                <!-- شارة المنتج -->
-                <div>
-                    <label class="block text-sm font-bold text-slate-300 mb-2">الشارة (تظهر فوق السعر)</label>
-                    <input type="text" id="app-tag" placeholder="مثال: شحن فوري، الأكثر مبيعاً" class="w-full p-3 rounded-lg bg-slate-900 border border-slate-700 text-white outline-none focus:border-cyan-400">
-                </div>
-
-                <!-- الأيقونة -->
-                <div>
-                    <label class="block text-sm font-bold text-slate-300 mb-2">أيقونة المنتج</label>
-                    <select id="app-icon" class="w-full p-3 rounded-lg bg-slate-900 border border-slate-700 text-white outline-none focus:border-cyan-400">
-                        <option value="spark">نجمة (Spark)</option>
-                        <option value="game">ألعاب (Game)</option>
-                        <option value="play">تشغيل (Play)</option>
-                        <option value="flame">لهب (Flame)</option>
-                        <option value="screen">شاشة (Screen)</option>
-                        <option value="bot">بوت (Bot)</option>
-                        <option value="pen">تصميم (Pen)</option>
-                        <option value="window">برامج (Window)</option>
-                        <option value="gift">هدايا (Gift)</option>
-                        <option value="wallet">محفظة (Wallet)</option>
-                        <option value="code">برمجة (Code)</option>
-                        <option value="shield">حماية (Shield)</option>
-                    </select>
-                </div>
-
-                <!-- الخلفية -->
-                <div>
-                    <label class="block text-sm font-bold text-slate-300 mb-2">خلفية الكارت</label>
-                    <select id="app-art" class="w-full p-3 rounded-lg bg-slate-900 border border-slate-700 text-white outline-none focus:border-cyan-400">
-                        <option value="art-games">أزرق غامق (ألعاب)</option>
-                        <option value="art-stream">بنفسجي (ترفيه)</option>
-                        <option value="art-shahid">ذهبي</option>
-                        <option value="art-bot">تكنولوجيا</option>
-                        <option value="art-design">إبداعي</option>
-                        <option value="art-software">برمجيات</option>
-                        <option value="art-gift">هدايا</option>
-                        <option value="art-money">أموال</option>
-                        <option value="art-web">ويب</option>
-                        <option value="art-support">دعم</option>
-                        <option value="art-extra">عام</option>
-                    </select>
-                </div>
-
-                <!-- صورة المنتج (رفع مباشر) -->
-                <div class="md:col-span-2 bg-slate-900 p-4 rounded-xl border border-slate-700">
-                    <label class="block text-sm font-bold text-slate-300 mb-2">صورة المنتج (اختياري - لو رفعتها هتظهر بدل الخلفية)</label>
-                    <input type="file" id="app-image" accept="image/*" class="w-full text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-bold file:bg-cyan-500 file:text-black hover:file:bg-cyan-400 transition">
-                    <div class="mt-4 hidden" id="image-preview-container">
-                        <span class="text-xs text-slate-400 block mb-2">معاينة الصورة:</span>
-                        <img id="image-preview" src="" class="w-24 h-24 object-contain bg-white rounded-lg border border-slate-600 p-1">
-                    </div>
-                </div>
-
-                <!-- الوصف -->
-                <div class="md:col-span-2">
-                    <label class="block text-sm font-bold text-slate-300 mb-2">وصف المنتج</label>
-                    <textarea id="app-desc" placeholder="اكتب تفاصيل المنتج هنا..." class="w-full p-3 rounded-lg bg-slate-900 border border-slate-700 text-white outline-none focus:border-cyan-400" rows="3"></textarea>
-                </div>
-
-                <!-- خيارات مميزة -->
-                <div class="md:col-span-2 flex items-center gap-3">
-                    <input type="checkbox" id="app-featured" class="w-5 h-5 accent-cyan-500">
-                    <label for="app-featured" class="text-sm font-bold text-slate-300 cursor-pointer">تمييز المنتج كمنتج مميز (يظهر بلون بارز)</label>
-                </div>
-
-                <!-- أزرار الحفظ -->
-                <div class="md:col-span-2 flex flex-col sm:flex-row gap-3 mt-4 border-t border-slate-700 pt-4">
-                    <button onclick="saveProduct(false)" class="flex-1 bg-cyan-500 text-black font-bold py-3 rounded-lg hover:bg-cyan-400 transition text-lg">حفظ المنتج</button>
-                    <button onclick="saveProduct(true)" class="flex-1 bg-slate-700 text-white font-bold py-3 rounded-lg hover:bg-slate-600 transition text-lg">حفظ وإضافة منتج آخر</button>
-                    <button onclick="resetForm()" class="bg-transparent border border-slate-600 text-slate-400 font-bold py-3 px-6 rounded-lg hover:text-white hover:border-slate-400 transition">إلغاء</button>
-                </div>
+            <div class="flex gap-2 w-full md:w-auto">
+                <button onclick="switchTab('products')" id="tab-products" class="tab-btn flex-1 md:flex-none px-6 py-2 rounded-lg bg-slate-800 text-white transition">المنتجات</button>
+                <button onclick="switchTab('categories')" id="tab-categories" class="tab-btn flex-1 md:flex-none px-6 py-2 rounded-lg bg-slate-800 text-white transition">الأقسام</button>
+                <button onclick="logout()" class="px-6 py-2 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white transition">خروج</button>
             </div>
         </div>
 
-        <!-- قائمة المنتجات -->
-        <h2 class="text-xl font-bold mb-4 text-white">المنتجات الحالية</h2>
-        <div id="products-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        <div id="alert-box" class="hidden mb-6 p-4 rounded-xl font-bold text-center"></div>
+
+        <!-- ================= قسم المنتجات ================= -->
+        <div id="section-products" class="block">
+            <div class="bg-slate-800 p-6 rounded-2xl mb-8 border border-slate-700">
+                <h2 id="product-form-title" class="text-xl font-bold mb-6 text-white border-b border-slate-600 pb-2">إضافة منتج جديد</h2>
+                <input type="hidden" id="app-id">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <div>
+                        <label class="block text-sm font-bold text-slate-300 mb-2">اسم المنتج</label>
+                        <input type="text" id="app-name" placeholder="مثال: شحن 1000 شدة ببجي" class="w-full p-3 rounded-lg bg-slate-900 border border-slate-700 text-white outline-none focus:border-cyan-400">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold text-slate-300 mb-2">القسم</label>
+                        <select id="app-category" class="w-full p-3 rounded-lg bg-slate-900 border border-slate-700 text-white outline-none focus:border-cyan-400"></select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold text-slate-300 mb-2">السعر (بالدولار)</label>
+                        <input type="number" id="app-price" placeholder="مثال: 15" min="0" step="0.01" class="w-full p-3 rounded-lg bg-slate-900 border border-slate-700 text-white outline-none focus:border-cyan-400">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold text-slate-300 mb-2">طريقة عرض السعر</label>
+                        <select id="price-mode" class="w-full p-3 rounded-lg bg-slate-900 border border-slate-700 text-white outline-none focus:border-cyan-400">
+                            <option value="fixed">سعر ثابت</option>
+                            <option value="from">يبدأ من</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold text-slate-300 mb-2">الشارة (تظهر فوق السعر)</label>
+                        <input type="text" id="app-tag" placeholder="مثال: شحن فوري، الأكثر مبيعاً" class="w-full p-3 rounded-lg bg-slate-900 border border-slate-700 text-white outline-none focus:border-cyan-400">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold text-slate-300 mb-2">حالة المخزون</label>
+                        <select id="app-status" class="w-full p-3 rounded-lg bg-slate-900 border border-slate-700 text-white outline-none focus:border-cyan-400">
+                            <option value="available">متاح</option>
+                            <option value="limited">كمية محدودة</option>
+                            <option value="out">نفد</option>
+                            <option value="hidden">مخفي</option>
+                        </select>
+                    </div>
+
+                    <div class="md:col-span-2 bg-slate-900 p-4 rounded-xl border border-slate-700">
+                        <label class="block text-sm font-bold text-slate-300 mb-2">صورة المنتج (اختياري - لو رفعتها هتظهر بدل الخلفية)</label>
+                        <input type="file" id="app-image" accept="image/*" class="w-full text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-bold file:bg-cyan-500 file:text-black hover:file:bg-cyan-400 transition">
+                        <div class="mt-4 hidden" id="image-preview-container">
+                            <span class="text-xs text-slate-400 block mb-2">معاينة الصورة:</span>
+                            <img id="image-preview" src="" class="w-24 h-24 object-contain bg-white rounded-lg border border-slate-600 p-1">
+                        </div>
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-bold text-slate-300 mb-2">وصف المنتج</label>
+                        <textarea id="app-desc" placeholder="اكتب تفاصيل المنتج هنا..." class="w-full p-3 rounded-lg bg-slate-900 border border-slate-700 text-white outline-none focus:border-cyan-400" rows="3"></textarea>
+                    </div>
+
+                    <div class="md:col-span-2 flex flex-col sm:flex-row gap-3 mt-4 border-t border-slate-700 pt-4">
+                        <button onclick="saveProduct()" id="btn-save-product" class="flex-1 bg-cyan-500 text-black font-bold py-3 rounded-lg hover:bg-cyan-400 transition text-lg">حفظ المنتج</button>
+                        <button onclick="resetProductForm()" id="btn-cancel-edit" class="hidden bg-transparent border border-slate-600 text-slate-400 font-bold py-3 px-6 rounded-lg hover:text-white hover:border-slate-400 transition">إلغاء التعديل</button>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="text-xl font-bold mb-4 text-white">المنتجات الحالية</h2>
+            <div id="products-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        </div>
+
+        <!-- ================= قسم إدارة الأقسام ================= -->
+        <div id="section-categories" class="hidden">
+            <div class="bg-slate-800 p-6 rounded-2xl mb-8 border border-slate-700">
+                <h2 class="text-xl font-bold mb-6 text-white border-b border-slate-600 pb-2">إضافة قسم جديد</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <label class="block text-sm font-bold text-slate-300 mb-2">معرف القسم (إنجليزي بدون مسافات)</label>
+                        <input type="text" id="cat-key" placeholder="مثال: games" class="w-full p-3 rounded-lg bg-slate-900 border border-slate-700 text-white outline-none focus:border-cyan-400" dir="ltr">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-slate-300 mb-2">اسم القسم (بالعربي)</label>
+                        <input type="text" id="cat-label" placeholder="مثال: الألعاب" class="w-full p-3 rounded-lg bg-slate-900 border border-slate-700 text-white outline-none focus:border-cyan-400">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-slate-300 mb-2">أيقونة القسم</label>
+                        <select id="cat-icon" class="w-full p-3 rounded-lg bg-slate-900 border border-slate-700 text-white outline-none focus:border-cyan-400">
+                            <option value="grid">شبكة (Grid)</option>
+                            <option value="game">ألعاب (Game)</option>
+                            <option value="play">تشغيل (Play)</option>
+                            <option value="flame">لهب (Flame)</option>
+                            <option value="gift">هدايا (Gift)</option>
+                            <option value="pen">تصميم (Pen)</option>
+                            <option value="window">برامج (Window)</option>
+                            <option value="code">برمجة (Code)</option>
+                            <option value="wallet">محفظة (Wallet)</option>
+                            <option value="shield">حماية (Shield)</option>
+                        </select>
+                    </div>
+                    <div class="md:col-span-3">
+                        <button onclick="saveCategory()" class="w-full md:w-auto bg-cyan-500 text-black font-bold py-3 px-8 rounded-lg hover:bg-cyan-400 transition">إضافة القسم</button>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="text-xl font-bold mb-4 text-white">الأقسام الحالية</h2>
+            <div id="categories-list" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+        </div>
+
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, getDoc, updateDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAZucoNuZyKDoxfS7tboc3-ZttqONuw_vw",
@@ -182,7 +164,8 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        let base64Image = ""; // لتخزين الصورة المرفوعة
+        let base64Image = ""; 
+        let currentCategories = [];
 
         // إظهار رسائل التنبيه
         function showAlert(msg, type = "success") {
@@ -192,18 +175,29 @@
             setTimeout(() => { box.className = 'hidden'; }, 4000);
         }
 
-        // رفع الصورة ومعاينتها
+        // التبديل بين التابات
+        window.switchTab = (tab) => {
+            document.getElementById('section-products').classList.add('hidden');
+            document.getElementById('section-categories').classList.add('hidden');
+            document.getElementById('tab-products').classList.remove('active');
+            document.getElementById('tab-categories').classList.remove('active');
+
+            document.getElementById(`section-${tab}`).classList.remove('hidden');
+            document.getElementById(`tab-${tab}`).classList.add('active');
+            
+            if(tab === 'products') loadProducts();
+            if(tab === 'categories') loadCategories();
+        };
+
+        // رفع الصورة
         document.getElementById('app-image').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (!file) return;
-            
-            // التأكد إن الحجم أقل من 800 كيلوبايت (حد Firestore)
             if (file.size > 800 * 1024) {
                 showAlert("حجم الصورة كبير جداً! يرجى اختيار صورة أقل من 800 كيلوبايت.", "error");
                 this.value = '';
                 return;
             }
-
             const reader = new FileReader();
             reader.onload = function(event) {
                 base64Image = event.target.result;
@@ -230,59 +224,112 @@
             if (user) {
                 document.getElementById('login-section').classList.add('hidden');
                 document.getElementById('admin-section').classList.remove('hidden');
+                loadCategories(); // تحميل الأقسام أولاً
                 loadProducts();
+                switchTab('products');
             } else {
                 document.getElementById('login-section').classList.remove('hidden');
                 document.getElementById('admin-section').classList.add('hidden');
             }
         });
 
-        window.resetForm = () => {
+        // ================= إدارة المنتجات =================
+        window.resetProductForm = () => {
+            document.getElementById('app-id').value = '';
             document.getElementById('app-name').value = '';
             document.getElementById('app-price').value = '';
             document.getElementById('app-tag').value = '';
             document.getElementById('app-desc').value = '';
             document.getElementById('app-image').value = '';
-            document.getElementById('app-featured').checked = false;
+            document.getElementById('app-status').value = 'available';
+            document.getElementById('app-category').value = currentCategories[0]?.id || 'games';
             base64Image = "";
             document.getElementById('image-preview-container').classList.add('hidden');
+            
+            document.getElementById('product-form-title').innerText = "إضافة منتج جديد";
+            document.getElementById('btn-save-product').innerText = "حفظ المنتج";
+            document.getElementById('btn-cancel-edit').classList.add('hidden');
         };
 
-        window.saveProduct = async (addAnother = false) => {
-            const categoryId = document.getElementById('cat-id').value;
+        window.saveProduct = async () => {
+            const id = document.getElementById('app-id').value;
+            const categoryId = document.getElementById('app-category').value;
             const name = document.getElementById('app-name').value.trim();
-            const priceStr = document.getElementById('app-price').value;
-            const price = parseFloat(priceStr);
+            const price = parseFloat(document.getElementById('app-price').value);
             const priceMode = document.getElementById('price-mode').value;
             const status = document.getElementById('app-status').value;
             const tag = document.getElementById('app-tag').value;
-            const icon = document.getElementById('app-icon').value;
-            const art = document.getElementById('app-art').value;
             const description = document.getElementById('app-desc').value;
-            const featured = document.getElementById('app-featured').checked;
 
             if(!name || isNaN(price) || price < 0) {
-                return showAlert("يرجى التأكد من اسم المنتج والسعر (يجب أن يكون رقماً موجباً).", "error");
+                return showAlert("يرجى التأكد من اسم المنتج والسعر.", "error");
             }
 
             try {
-                await addDoc(collection(db, "products"), {
+                const productData = {
                     categoryId, name, price, priceMode, status, tag: tag || "رقمي", 
-                    icon, art, description: description || "لا يوجد وصف.", 
-                    featured, image: base64Image, createdAt: Date.now()
-                });
+                    description: description || "لا يوجد وصف.", createdAt: Date.now()
+                };
                 
-                showAlert("تم إضافة المنتج بنجاح!");
-                
-                if(addAnother) {
-                    resetForm();
+                // لو في صورة جديدة، نحدثها. لو مفيش صورة جديدة وبنعدل، نسيب القديمة.
+                if (base64Image) productData.image = base64Image;
+
+                if (id) {
+                    // تعديل منتج موجود
+                    await updateDoc(doc(db, "products", id), productData);
+                    showAlert("تم تعديل المنتج بنجاح!");
                 } else {
-                    resetForm();
-                    loadProducts(); // تحديث القائمة
-                    window.scrollTo({ top: document.getElementById('products-list').offsetTop, behavior: 'smooth' });
+                    // إضافة منتج جديد
+                    await addDoc(collection(db, "products"), productData);
+                    showAlert("تم إضافة المنتج بنجاح!");
                 }
+                
+                resetProductForm();
+                loadProducts();
             } catch (e) {
                 showAlert("خطأ: " + e.message, "error");
+            }
+        };
+
+        window.editProduct = async (id) => {
+            try {
+                const docRef = doc(db, "products", id);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    document.getElementById('app-id').value = id;
+                    document.getElementById('app-name').value = data.name;
+                    document.getElementById('app-category').value = data.categoryId;
+                    document.getElementById('app-price').value = data.price;
+                    document.getElementById('price-mode').value = data.priceMode || 'fixed';
+                    document.getElementById('app-status').value = data.status || 'available';
+                    document.getElementById('app-tag').value = data.tag || '';
+                    document.getElementById('app-desc').value = data.description || '';
+                    
+                    if(data.image) {
+                        base64Image = data.image;
+                        document.getElementById('image-preview').src = data.image;
+                        document.getElementById('image-preview-container').classList.remove('hidden');
+                    } else {
+                        base64Image = "";
+                        document.getElementById('image-preview-container').classList.add('hidden');
+                    }
+                    
+                    document.getElementById('product-form-title').innerText = "تعديل المنتج";
+                    document.getElementById('btn-save-product').innerText = "حفظ التعديلات";
+                    document.getElementById('btn-cancel-edit').classList.remove('hidden');
+                    
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            } catch (e) {
+                showAlert("خطأ في جلب المنتج: " + e.message, "error");
+            }
+        };
+
+        window.deleteProduct = async (id) => {
+            if(confirm("هل أنت متأكد من مسح هذا المنتج؟")) {
+                await deleteDoc(doc(db, "products", id));
+                loadProducts();
             }
         };
 
@@ -293,39 +340,114 @@
                 const querySnapshot = await getDocs(collection(db, "products"));
                 list.innerHTML = '';
                 if(querySnapshot.empty) {
-                    list.innerHTML = '<div class="col-span-full text-center text-slate-500 py-10">لا توجد منتجات حالياً. ابدأ بإضافة منتج جديد.</div>';
+                    list.innerHTML = '<div class="col-span-full text-center text-slate-500 py-10">لا توجد منتجات حالياً.</div>';
                     return;
                 }
                 querySnapshot.forEach((document) => {
                     const data = document.data();
                     const div = document.createElement('div');
                     div.className = 'bg-slate-800 p-4 rounded-xl flex flex-col justify-between border border-slate-700';
+                    
+                    const catName = currentCategories.find(c => c.id === data.categoryId)?.label || data.categoryId;
+
                     div.innerHTML = `
                         <div class="flex items-center gap-3 mb-3">
-                            ${data.image ? `<img src="${data.image}" class="w-12 h-12 object-cover rounded-lg bg-white p-1">` : `<div class="w-12 h-12 rounded-lg bg-slate-700 flex items-center justify-center text-slate-400"><i class="fa-solid fa-image"></i></div>`}
+                            ${data.image ? `<img src="${data.image}" class="w-12 h-12 object-cover rounded-lg bg-white p-1">` : `<div class="w-12 h-12 rounded-lg bg-slate-700 flex items-center justify-center text-slate-400"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></div>`}
                             <div>
                                 <div class="font-bold text-white line-clamp-1">${data.name}</div>
                                 <div class="text-sm text-cyan-400 font-bold">${data.priceMode === 'from' ? 'من ' : ''}${data.price}$</div>
+                                <div class="text-xs text-slate-500">${catName}</div>
                             </div>
                         </div>
-                        <div class="flex justify-between items-center mt-auto pt-3 border-t border-slate-700">
-                            <span class="text-xs text-slate-400">${data.categoryId}</span>
-                            <button onclick="deleteProduct('${document.id}')" class="text-red-400 hover:text-red-300 bg-red-500/10 px-3 py-1 rounded-lg transition">مسح</button>
+                        <div class="flex justify-between items-center mt-auto pt-3 border-t border-slate-700 gap-2">
+                            <button onclick="editProduct('${document.id}')" class="flex-1 text-cyan-400 hover:text-cyan-300 bg-cyan-500/10 py-1 rounded-lg transition">تعديل</button>
+                            <button onclick="deleteProduct('${document.id}')" class="flex-1 text-red-400 hover:text-red-300 bg-red-500/10 py-1 rounded-lg transition">مسح</button>
                         </div>
                     `;
                     list.appendChild(div);
                 });
             } catch (e) {
-                list.innerHTML = "خطأ في تحميل المنتجات: " + e.message;
+                list.innerHTML = "خطأ في التحميل: " + e.message;
             }
         }
 
-        window.deleteProduct = async (id) => {
-            if(confirm("هل أنت متأكد من مسح هذا المنتج؟")) {
-                await deleteDoc(doc(db, "products", id));
-                loadProducts();
+        // ================= إدارة الأقسام =================
+        window.saveCategory = async () => {
+            const id = document.getElementById('cat-key').value.trim().toLowerCase().replace(/\s+/g, '-');
+            const label = document.getElementById('cat-label').value.trim();
+            const icon = document.getElementById('cat-icon').value;
+
+            if(!id || !label) return showAlert("يرجى ملء المعرف والاسم.", "error");
+
+            try {
+                await setDoc(doc(db, "categories", id), { label, icon, order: Date.now() });
+                showAlert("تم إضافة القسم بنجاح!");
+                
+                document.getElementById('cat-key').value = '';
+                document.getElementById('cat-label').value = '';
+                
+                loadCategories();
+            } catch (e) {
+                showAlert("خطأ: " + e.message, "error");
             }
         };
+
+        window.deleteCategory = async (id) => {
+            if(confirm("هل أنت متأكد من مسح هذا القسم؟ المنتجات بداخله لن تظهر في المتجر.")) {
+                await deleteDoc(doc(db, "categories", id));
+                loadCategories();
+            }
+        };
+
+        async function loadCategories() {
+            const list = document.getElementById('categories-list');
+            const select = document.getElementById('app-category');
+            
+            list.innerHTML = 'جاري التحميل...';
+            try {
+                const querySnapshot = await getDocs(collection(db, "categories"));
+                currentCategories = [];
+                list.innerHTML = '';
+                select.innerHTML = '';
+                
+                if(querySnapshot.empty) {
+                    // أقسام افتراضية لو الداتابيز فاضية
+                    currentCategories = [
+                        {id:'games', label:'الألعاب', icon:'game'},
+                        {id:'subscriptions', label:'الاشتراكات', icon:'play'}
+                    ];
+                } else {
+                    querySnapshot.forEach((doc) => {
+                        currentCategories.push({ id: doc.id, ...doc.data() });
+                    });
+                }
+
+                // ترتيب الأقسام لو ليها order
+                currentCategories.sort((a,b) => (a.order || 0) - (b.order || 0));
+
+                // تعبئة القائمة المنسدلة للمنتجات
+                currentCategories.forEach(c => {
+                    select.innerHTML += `<option value="${c.id}">${c.label}</option>`;
+                });
+
+                // عرض الأقسام
+                currentCategories.forEach(c => {
+                    const div = document.createElement('div');
+                    div.className = 'bg-slate-800 p-4 rounded-xl flex justify-between items-center border border-slate-700';
+                    div.innerHTML = `
+                        <div>
+                            <div class="font-bold text-white">${c.label}</div>
+                            <div class="text-xs text-slate-500" dir="ltr">${c.id}</div>
+                        </div>
+                        <button onclick="deleteCategory('${c.id}')" class="text-red-400 hover:text-red-300 bg-red-500/10 px-3 py-1 rounded-lg transition">مسح</button>
+                    `;
+                    list.appendChild(div);
+                });
+
+            } catch (e) {
+                list.innerHTML = "خطأ في التحميل: " + e.message;
+            }
+        }
     </script>
 </body>
 </html>
