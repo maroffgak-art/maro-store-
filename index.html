@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Maro | Premium Digital Store</title>
     
-    <!-- سياسة الأمان CSP -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://api.telegram.org;">
+    <!-- سياسة الأمان CSP (تسمح بالأيقونات والخطوط وصور Unsplash) -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://images.unsplash.com; connect-src 'self' https://api.telegram.org;">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -136,7 +136,7 @@
             
             <nav class="hidden md:flex gap-8 font-bold text-gray-400 text-sm">
                 <a href="#home" class="text-white transition">الرئيسية</a>
-                <a href="#categories" class="hover:text-white transition">الفئات</a>
+                <a href="#products" class="hover:text-white transition">المنتجات</a>
                 <a href="#contact" class="hover:text-white transition">الدعم الفني</a>
             </nav>
             
@@ -166,8 +166,8 @@
                     كل ما تحتاجه من اشتراكات، ألعاب، وحسابات جاهزة في مكان واحد. تسليم فوري وأسعار تنافسية.
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                    <a href="#categories" class="btn-neon px-8 py-3 rounded-xl font-bold flex items-center justify-center gap-2">
-                        تصفح المتجر <i class="fa-solid fa-arrow-left"></i>
+                    <a href="#products" class="btn-neon px-8 py-3 rounded-xl font-bold flex items-center justify-center gap-2">
+                        تصفح المنتجات <i class="fa-solid fa-arrow-left"></i>
                     </a>
                     <a href="https://t.me/qijub" target="_blank" rel="noopener noreferrer" class="glass-panel px-8 py-3 rounded-xl font-bold text-white hover:bg-white/10 transition flex items-center justify-center gap-2">
                         <i class="fa-brands fa-telegram text-blue-400"></i> الدعم المباشر
@@ -177,70 +177,74 @@
             
             <div class="relative hidden md:block perspective-1000">
                 <div class="w-full h-[400px] rounded-3xl glass-panel overflow-hidden relative group transform rotate-y-12 rotate-x-6 hover:rotate-0 transition duration-700 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
-                    <img src="https://images.unsplash.com/photo-1614680376573-df3480f0c6ff?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover opacity-60 group-hover:scale-110 transition duration-700" alt="Store Banner">
+                    <!-- صورة تكنولوجيا بدل النوتة الموسيقية -->
+                    <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover opacity-60 group-hover:scale-110 transition duration-700" alt="Digital Store">
                     <div class="absolute inset-0 bg-gradient-to-t from-[#09090b] via-transparent to-transparent"></div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="categories" class="py-20 px-6 relative z-10">
+    <section id="products" class="py-20 px-6 relative z-10">
         <div class="max-w-7xl mx-auto">
             <div class="flex justify-between items-end mb-12">
                 <div>
-                    <h2 class="text-3xl font-black mb-2">تصفح <span class="text-indigo-500">الأقسام</span></h2>
-                    <p class="text-gray-400">اختر ما يناسبك من باقاتنا المتنوعة</p>
+                    <h2 class="text-3xl font-black mb-2">المنتجات <span class="text-indigo-500">المميزة</span></h2>
+                    <p class="text-gray-400">اختر منتجك، أضفه للسلة، وأتمم طلبك عبر تليجرام.</p>
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 
-                <div class="tilt-card glass-panel rounded-2xl p-6 relative group cursor-pointer" onmousemove="handleTilt(event, this)" onmouseleave="resetTilt(this)" onclick="addToCart('تطبيقات الدردشة')">
-                    <div class="w-14 h-14 rounded-xl card-icon flex items-center justify-center text-2xl text-indigo-400 mb-6 relative z-10">
-                        <i class="fa-solid fa-comments"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-1 relative z-10">تطبيقات الدردشة</h3>
-                    <p class="text-gray-400 text-sm mb-4 relative z-10">واتساب، تليجرام، ديسكورد</p>
-                    <div class="flex items-center justify-between relative z-10">
-                        <span class="text-xs font-bold text-indigo-400 bg-indigo-500/10 px-3 py-1 rounded-full">متوفر الآن</span>
-                        <i class="fa-solid fa-plus text-gray-500 group-hover:text-white transition"></i>
-                    </div>
-                </div>
-
-                <div class="tilt-card glass-panel rounded-2xl p-6 relative group cursor-pointer" onmousemove="handleTilt(event, this)" onmouseleave="resetTilt(this)" onclick="addToCart('باقات الألعاب')">
-                    <div class="w-14 h-14 rounded-xl card-icon flex items-center justify-center text-2xl text-pink-400 mb-6 relative z-10">
+                <!-- المنتج 1 -->
+                <button class="text-right tilt-card glass-panel rounded-2xl p-6 relative group w-full focus:outline-none focus:ring-2 focus:ring-indigo-500" onmousemove="handleTilt(event, this)" onmouseleave="resetTilt(this)" onclick="addToCart(1, 'شحن 100 شدة ببجي', 10)">
+                    <div class="w-14 h-14 rounded-xl card-icon flex items-center justify-center text-2xl text-yellow-400 mb-6 relative z-10">
                         <i class="fa-solid fa-gamepad"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-1 relative z-10">باقات الألعاب</h3>
-                    <p class="text-gray-400 text-sm mb-4 relative z-10">ببجي، فري فاير، كول أوف ديوتي</p>
+                    <h3 class="text-xl font-bold mb-1 relative z-10">شحن 100 شدة ببجي</h3>
+                    <p class="text-gray-400 text-sm mb-4 relative z-10">تسليم فوري ومباشر للحساب.</p>
                     <div class="flex items-center justify-between relative z-10">
-                        <span class="text-xs font-bold text-pink-400 bg-pink-500/10 px-3 py-1 rounded-full">شحن فوري</span>
-                        <i class="fa-solid fa-plus text-gray-500 group-hover:text-white transition"></i>
+                        <span class="text-lg font-bold text-yellow-400">$10</span>
+                        <span class="text-xs font-bold text-indigo-400 bg-indigo-500/10 px-3 py-1 rounded-full group-hover:bg-indigo-500 group-hover:text-white transition">أضف للسلة <i class="fa-solid fa-plus mr-1"></i></span>
                     </div>
-                </div>
+                </button>
 
-                <div class="tilt-card glass-panel rounded-2xl p-6 relative group cursor-pointer" onmousemove="handleTilt(event, this)" onmouseleave="resetTilt(this)" onclick="addToCart('الاشتراكات')">
+                <!-- المنتج 2 -->
+                <button class="text-right tilt-card glass-panel rounded-2xl p-6 relative group w-full focus:outline-none focus:ring-2 focus:ring-indigo-500" onmousemove="handleTilt(event, this)" onmouseleave="resetTilt(this)" onclick="addToCart(2, 'اشتراك نتفليكس شهر', 5)">
                     <div class="w-14 h-14 rounded-xl card-icon flex items-center justify-center text-2xl text-red-500 mb-6 relative z-10">
                         <i class="fa-solid fa-play"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-1 relative z-10">الاشتراكات</h3>
-                    <p class="text-gray-400 text-sm mb-4 relative z-10">نتفليكس، شاهد، سبوتيفاي</p>
+                    <h3 class="text-xl font-bold mb-1 relative z-10">اشتراك نتفليكس شهر</h3>
+                    <p class="text-gray-400 text-sm mb-4 relative z-10">حساب خاص 4K لشهر كامل.</p>
                     <div class="flex items-center justify-between relative z-10">
-                        <span class="text-xs font-bold text-red-500 bg-red-500/10 px-3 py-1 rounded-full">أرخص سعر</span>
-                        <i class="fa-solid fa-plus text-gray-500 group-hover:text-white transition"></i>
+                        <span class="text-lg font-bold text-red-500">$5</span>
+                        <span class="text-xs font-bold text-indigo-400 bg-indigo-500/10 px-3 py-1 rounded-full group-hover:bg-indigo-500 group-hover:text-white transition">أضف للسلة <i class="fa-solid fa-plus mr-1"></i></span>
                     </div>
-                </div>
+                </button>
 
-                <div class="tilt-card glass-panel rounded-2xl p-6 relative group cursor-pointer" onmousemove="handleTilt(event, this)" onmouseleave="resetTilt(this)" onclick="addToCart('الدفع الإلكتروني')">
-                    <div class="w-14 h-14 rounded-xl card-icon flex items-center justify-center text-2xl text-emerald-400 mb-6 relative z-10">
-                        <i class="fa-solid fa-wallet"></i>
+                <!-- المنتج 3 -->
+                <button class="text-right tilt-card glass-panel rounded-2xl p-6 relative group w-full focus:outline-none focus:ring-2 focus:ring-indigo-500" onmousemove="handleTilt(event, this)" onmouseleave="resetTilt(this)" onclick="addToCart(3, 'شحن 500 شدة فري فاير', 20)">
+                    <div class="w-14 h-14 rounded-xl card-icon flex items-center justify-center text-2xl text-blue-400 mb-6 relative z-10">
+                        <i class="fa-solid fa-fire"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-1 relative z-10">الدفع الإلكتروني</h3>
-                    <p class="text-gray-400 text-sm mb-4 relative z-10">محافظ رقمية، فيزا، باي بال</p>
+                    <h3 class="text-xl font-bold mb-1 relative z-10">شحن 500 شدة فري فاير</h3>
+                    <p class="text-gray-400 text-sm mb-4 relative z-10">شحن آمن وسريع.</p>
                     <div class="flex items-center justify-between relative z-10">
-                        <span class="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full">آمن 100%</span>
-                        <i class="fa-solid fa-plus text-gray-500 group-hover:text-white transition"></i>
+                        <span class="text-lg font-bold text-blue-400">$20</span>
+                        <span class="text-xs font-bold text-indigo-400 bg-indigo-500/10 px-3 py-1 rounded-full group-hover:bg-indigo-500 group-hover:text-white transition">أضف للسلة <i class="fa-solid fa-plus mr-1"></i></span>
                     </div>
+                </button>
+
+                <!-- المنتج 4: كارت معلومات بدل منتج وهمي -->
+                <div class="text-right glass-panel rounded-2xl p-6 relative border-dashed border-white/20">
+                    <div class="w-14 h-14 rounded-xl bg-white/5 flex items-center justify-center text-2xl text-gray-400 mb-6 relative z-10">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-1 relative z-10">طرق الدفع والدعم</h3>
+                    <p class="text-gray-400 text-sm mb-4 relative z-10">ندعم المحافظ الإلكترونية، USDT، والتحويل البنكي. تواصل معنا للاستفسار.</p>
+                    <a href="https://t.me/qijub" target="_blank" rel="noopener noreferrer" class="text-sm font-bold text-indigo-400 hover:text-white transition inline-flex items-center gap-1">
+                        اسأل عن الدفع <i class="fa-solid fa-arrow-left"></i>
+                    </a>
                 </div>
             </div>
         </div>
@@ -273,9 +277,9 @@
             <i class="fa-solid fa-house text-lg"></i>
             <span class="text-[10px] font-bold">الرئيسية</span>
         </a>
-        <a href="#categories" class="flex flex-col items-center text-gray-400 hover:text-white transition gap-1">
+        <a href="#products" class="flex flex-col items-center text-gray-400 hover:text-white transition gap-1">
             <i class="fa-solid fa-table-cells-large text-lg"></i>
-            <span class="text-[10px] font-bold">الأقسام</span>
+            <span class="text-[10px] font-bold">المنتجات</span>
         </a>
         <button onclick="toggleCart()" class="flex flex-col items-center text-gray-400 hover:text-white transition gap-1 relative">
             <i class="fa-solid fa-cart-shopping text-lg"></i>
@@ -293,17 +297,29 @@
             <h3 class="text-xl font-bold flex items-center gap-2"><i class="fa-solid fa-cart-shopping text-indigo-500"></i> سلة المشتريات</h3>
             <button onclick="toggleCart()" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-red-500 transition"><i class="fa-solid fa-xmark"></i></button>
         </div>
+        
+        <!-- قائمة المنتجات في السلة -->
         <div id="cart-items" class="flex-1 p-6 overflow-y-auto flex flex-col gap-4">
             <div class="text-center text-gray-500 mt-10">السلة فارغة حالياً</div>
         </div>
+        
+        <!-- الحساب الكلي وإتمام الطلب -->
         <div class="p-6 border-t border-white/10 bg-white/5">
-            <!-- غيرنا اسم الزرار -->
-            <button onclick="checkout()" class="w-full btn-neon py-4 rounded-xl font-bold text-lg mb-2">إرسال الطلب عبر تليجرام</button>
+            <div class="flex justify-between items-center mb-4 text-xl font-black">
+                <span>المجموع الكلي:</span>
+                <span id="cart-total" class="text-indigo-400">$0</span>
+            </div>
+            <button onclick="checkout()" class="w-full btn-neon py-4 rounded-xl font-bold text-lg mb-2">أرسل طلبك إلى تليجرام</button>
             <p class="text-center text-xs text-gray-500">سيتم تحويلك للتليجرام لتأكيد الطلب والدفع</p>
+            <div id="fallback-link" class="hidden mt-3 text-center">
+                <p class="text-xs text-gray-400 mb-1">إذا لم يفتح تليجرام تلقائياً:</p>
+                <a id="tg-direct-link" href="#" target="_blank" rel="noopener noreferrer" class="text-sm font-bold text-indigo-400 underline">اضغط هنا لفتح المحادثة</a>
+            </div>
         </div>
     </div>
 
     <script>
+        // حماية من فتح الـ Developer Tools والكليك يمين
         document.addEventListener('contextmenu', event => event.preventDefault());
         document.onkeydown = function(e) {
             if(e.keyCode == 123) { return false; }
@@ -318,19 +334,14 @@
                 const rect = card.getBoundingClientRect();
                 const x = e.clientX - rect.left;
                 const y = e.clientY - rect.top;
-                
                 card.style.setProperty('--mouse-x', `${x}px`);
                 card.style.setProperty('--mouse-y', `${y}px`);
-
                 const centerX = rect.width / 2;
                 const centerY = rect.height / 2;
-                
                 const rotateX = ((y - centerY) / centerY) * -10;
                 const rotateY = ((x - centerX) / centerX) * 10;
-
                 card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
             }
-
             function resetTilt(card) {
                 card.style.transform = `perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)`;
             }
@@ -339,9 +350,16 @@
             const cartDrawer = document.getElementById('cart-drawer');
             const cartItemsContainer = document.getElementById('cart-items');
             const cartCountElements = [document.getElementById('cart-count'), document.getElementById('cart-count-mobile')];
+            const cartTotalElement = document.getElementById('cart-total');
+            const fallbackLink = document.getElementById('fallback-link');
+            const tgDirectLink = document.getElementById('tg-direct-link');
 
             function toggleCart() {
                 cartDrawer.classList.toggle('translate-x-full');
+                // إخفاء اللينك الاحتياطي عند قفل السلة
+                if(cartDrawer.classList.contains('translate-x-full')) {
+                    fallbackLink.classList.add('hidden');
+                }
             }
 
             function sanitizeInput(str) {
@@ -350,24 +368,52 @@
                 return temp.innerHTML;
             }
 
-            function addToCart(itemName) {
-                const safeItem = sanitizeInput(itemName);
-                if(!cart.includes(safeItem)) {
-                    cart.push(safeItem);
+            // إضافة منتج للسلة (مع الـ ID والسعر)
+            function addToCart(id, name, price) {
+                const safeName = sanitizeInput(name);
+                const existingItem = cart.find(item => item.id === id);
+                
+                if (existingItem) {
+                    existingItem.qty += 1;
+                } else {
+                    cart.push({ id: id, name: safeName, price: price, qty: 1 });
+                }
+                
+                updateCartUI();
+                cartDrawer.classList.remove('translate-x-full');
+            }
+
+            // زيادة الكمية
+            function increaseQty(id) {
+                const item = cart.find(item => item.id === id);
+                if (item) { item.qty += 1; updateCartUI(); }
+            }
+
+            // تقليل الكمية
+            function decreaseQty(id) {
+                const item = cart.find(item => item.id === id);
+                if (item) {
+                    item.qty -= 1;
+                    if (item.qty <= 0) {
+                        cart = cart.filter(i => i.id !== id);
+                    }
                     updateCartUI();
-                    cartDrawer.classList.remove('translate-x-full');
                 }
             }
 
-            function removeFromCart(itemName) {
-                cart = cart.filter(item => item !== itemName);
-                updateCartUI();
-            }
-
+            // تحديث واجهة السلة
             function updateCartUI() {
-                cartCountElements.forEach(el => el.innerText = cart.length);
-                cartItemsContainer.innerHTML = '';
+                const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+                const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+                // تحديث العداد
+                cartCountElements.forEach(el => el.innerText = totalItems);
                 
+                // تحديث السعر الإجمالي
+                cartTotalElement.innerText = `$${totalPrice}`;
+                
+                // تحديث القائمة
+                cartItemsContainer.innerHTML = '';
                 if (cart.length === 0) {
                     cartItemsContainer.innerHTML = '<div class="text-center text-gray-500 mt-10">السلة فارغة حالياً</div>';
                     return;
@@ -375,43 +421,60 @@
 
                 cart.forEach(item => {
                     const div = document.createElement('div');
-                    div.className = 'glass-panel p-4 rounded-xl flex justify-between items-center';
+                    div.className = 'glass-panel p-4 rounded-xl flex flex-col gap-3';
                     
-                    const textContainer = document.createElement('div');
-                    textContainer.className = 'flex items-center gap-3';
-                    textContainer.innerHTML = `<div class="w-10 h-10 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center"><i class="fa-solid fa-check"></i></div>`;
+                    // اسم المنتج والسعر
+                    const header = document.createElement('div');
+                    header.className = 'flex justify-between items-start';
+                    header.innerHTML = `
+                        <div class="font-bold text-sm">${item.name}</div>
+                        <div class="text-indigo-400 font-bold">$${item.price * item.qty}</div>
+                    `;
                     
-                    const span = document.createElement('span');
-                    span.className = 'font-bold';
-                    span.textContent = item; 
-                    
-                    textContainer.appendChild(span);
-                    
-                    const btn = document.createElement('button');
-                    btn.className = 'text-red-400 hover:text-red-500 transition';
-                    btn.innerHTML = '<i class="fa-solid fa-trash"></i>';
-                    btn.onclick = () => removeFromCart(item);
+                    // أزرار التحكم بالكمية
+                    const controls = document.createElement('div');
+                    controls.className = 'flex items-center justify-between bg-white/5 rounded-lg p-1';
+                    controls.innerHTML = `
+                        <button onclick="decreaseQty(${item.id})" class="w-8 h-8 flex items-center justify-center hover:bg-white/10 rounded-md transition text-red-400"><i class="fa-solid fa-minus"></i></button>
+                        <span class="font-bold">${item.qty}</span>
+                        <button onclick="increaseQty(${item.id})" class="w-8 h-8 flex items-center justify-center hover:bg-white/10 rounded-md transition text-green-400"><i class="fa-solid fa-plus"></i></button>
+                    `;
 
-                    div.appendChild(textContainer);
-                    div.appendChild(btn);
+                    div.appendChild(header);
+                    div.appendChild(controls);
                     cartItemsContainer.appendChild(div);
                 });
             }
 
+            // إرسال الطلب لتليجرام
             function checkout() {
                 if(cart.length === 0) {
-                    alert("السلة فارغة! اختر قسم أولاً.");
+                    alert("السلة فارغة! أضف منتجات أولاً.");
                     return;
                 }
-                // رسالة منظمة زي ما الـ AI اقترح
-                let message = "مرحباً Maro Store،\nأريد طلب الخدمات التالية:\n\n";
-                cart.forEach((item, index) => {
-                    message += `🔹 ${item}\n`;
+                
+                let message = "مرحباً Maro Store،\nأريد طلب المنتجات التالية:\n\n";
+                let totalPrice = 0;
+                
+                cart.forEach((item) => {
+                    message += `🔹 ${item.name} (الكمية: ${item.qty}) - $${item.price * item.qty}\n`;
+                    totalPrice += item.price * item.qty;
                 });
+                
+                message += `\n💰 المجموع الكلي: $${totalPrice}\n`;
                 message += "\nالرجاء تأكيد الطلب وتزويدي بتفاصيل الدفع.";
                 
                 const encodedMessage = encodeURIComponent(message);
-                window.open(`https://t.me/qijub?text=${encodedMessage}`, '_blank', 'noopener,noreferrer');
+                const tgUrl = `https://t.me/qijub?text=${encodedMessage}`;
+                
+                // فتح تليجرام
+                const newWindow = window.open(tgUrl, '_blank', 'noopener,noreferrer');
+                
+                // كود احتياطي لو المتصفح قفل النافذة (زي سفاري على الآيفون)
+                if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
+                    tgDirectLink.href = tgUrl;
+                    fallbackLink.classList.remove('hidden');
+                }
             }
         } catch (error) {
             console.error("حدث خطأ غير متوقع، يرجى إعادة تحميل الصفحة.");
