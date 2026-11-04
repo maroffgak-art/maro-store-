@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Madara Store | Premium 8K Digital Market</title>
+    <title>MARO | Premium Digital Store</title>
     
-    <!-- سياسة الأمان CSP -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://images.unsplash.com https://cdn-icons-png.flaticon.com; connect-src 'self' https://api.telegram.org;">
+    <!-- سياسة الأمان -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://images.unsplash.com https://cdn-icons-png.flaticon.com https://www.google.com; connect-src 'self' https://api.telegram.org;">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,8 +18,8 @@
         :root {
             --primary: #00f2fe;
             --secondary: #4facfe;
-            --bg-dark: #050505;
-            --card-bg: rgba(255, 255, 255, 0.03);
+            --bg-dark: #030305;
+            --card-bg: rgba(255, 255, 255, 0.02);
         }
 
         body {
@@ -32,27 +32,33 @@
             user-select: none;
         }
 
-        /* خلفية شبكية وإضاءات 8K */
+        /* خلفية خرافية */
         .bg-grid {
             position: fixed;
             inset: 0;
-            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-            background-size: 50px 50px;
+            background-image: linear-gradient(rgba(0, 242, 254, 0.05) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(0, 242, 254, 0.05) 1px, transparent 1px);
+            background-size: 60px 60px;
             z-index: -2;
-            mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
-            -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+            mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
+            -webkit-mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
+            animation: gridMove 20s linear infinite;
         }
-        .glow-1 { position: fixed; top: -10%; right: -10%; width: 50vw; height: 50vw; background: radial-gradient(circle, rgba(0,242,254,0.1) 0%, transparent 70%); z-index: -1; }
-        .glow-2 { position: fixed; bottom: -10%; left: -10%; width: 50vw; height: 50vw; background: radial-gradient(circle, rgba(79,172,254,0.1) 0%, transparent 70%); z-index: -1; }
+        @keyframes gridMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 60px 60px; }
+        }
+
+        .glow-orb-1 { position: fixed; top: -10%; right: -10%; width: 60vw; height: 60vw; background: radial-gradient(circle, rgba(0,242,254,0.15) 0%, transparent 60%); z-index: -1; filter: blur(60px); }
+        .glow-orb-2 { position: fixed; bottom: -10%; left: -10%; width: 60vw; height: 60vw; background: radial-gradient(circle, rgba(79,172,254,0.15) 0%, transparent 60%); z-index: -1; filter: blur(60px); }
 
         /* الزجاج الفاخر */
         .glass {
             background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
         }
 
         /* تدرج النص */
@@ -64,17 +70,17 @@
 
         /* تأثير 3D للكروت */
         .card-3d {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
             transform-style: preserve-3d;
         }
         .card-3d:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 15px 35px -5px rgba(0, 242, 254, 0.2);
-            border-color: rgba(0, 242, 254, 0.4);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px -10px rgba(0, 242, 254, 0.15);
+            border-color: rgba(0, 242, 254, 0.3);
         }
         
         .card-image {
-            transition: transform 0.5s ease;
+            transition: transform 0.6s ease;
         }
         .card-3d:hover .card-image {
             transform: scale(1.1);
@@ -86,28 +92,40 @@
             color: #000;
             font-weight: 900;
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: 0.5s;
+        }
+        .btn-primary:hover::after {
+            left: 100%;
         }
         .btn-primary:hover {
-            box-shadow: 0 0 20px rgba(0, 242, 254, 0.5);
-            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(0, 242, 254, 0.6);
+            transform: translateY(-2px);
         }
 
         /* الأنيميشن للـ Modals */
         .modal-overlay {
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             opacity: 0;
             visibility: hidden;
-            transition: all 0.3s ease;
+            transition: all 0.4s ease;
         }
         .modal-overlay.active {
             opacity: 1;
             visibility: visible;
         }
         .modal-content {
-            transform: translateY(20px) scale(0.95);
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: translateY(30px) scale(0.9);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         .modal-overlay.active .modal-content {
             transform: translateY(0) scale(1);
@@ -120,8 +138,8 @@
 <body class="pb-24 md:pb-0">
 
     <div class="bg-grid"></div>
-    <div class="glow-1"></div>
-    <div class="glow-2"></div>
+    <div class="glow-orb-1"></div>
+    <div class="glow-orb-2"></div>
 
     <!-- الهيدر -->
     <header class="fixed top-0 w-full z-40 glass border-b border-white/5 transition-all duration-300">
@@ -131,7 +149,7 @@
                 <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#00f2fe] to-[#4facfe] flex items-center justify-center shadow-lg shadow-cyan-500/30">
                     <i class="fa-solid fa-cube text-black text-lg"></i>
                 </div>
-                <span class="text-2xl font-black tracking-widest text-white">MADARA<span class="text-gradient">.</span></span>
+                <span class="text-2xl font-black tracking-widest text-white">MARO<span class="text-gradient">.</span></span>
             </a>
             
             <!-- روابط الديسكتوب -->
@@ -144,7 +162,7 @@
             <!-- الأزرار -->
             <div class="flex items-center gap-3">
                 <!-- زرار تسجيل الدخول -->
-                <button onclick="openAuthModal()" class="hidden md:flex items-center gap-2 px-5 py-2 rounded-full glass hover:bg-white/10 transition text-sm font-bold border border-white/10">
+                <button onclick="openAuthModal()" class="login-btn hidden md:flex items-center gap-2 px-5 py-2 rounded-full glass hover:bg-white/10 transition text-sm font-bold border border-white/10">
                     <i class="fa-regular fa-user"></i> تسجيل الدخول
                 </button>
                 
@@ -159,31 +177,31 @@
 
     <!-- الهيرو (Hero Section) -->
     <section class="relative pt-40 pb-20 px-6 z-10 flex flex-col items-center text-center">
-        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-[#00f2fe] text-sm font-bold mb-8 border border-[#00f2fe]/30">
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-[#00f2fe] text-sm font-bold mb-8 border border-[#00f2fe]/30 shadow-[0_0_15px_rgba(0,242,254,0.2)]">
             <span class="w-2 h-2 rounded-full bg-[#00f2fe] animate-pulse"></span>
-            جودة خارقة | تسليم فوري 24/7
+            تسليم فوري | دعم 24/7
         </div>
         
-        <h1 class="text-5xl md:text-7xl font-black leading-tight mb-6">
+        <h1 class="text-6xl md:text-8xl font-black leading-tight mb-6 tracking-tight">
             متجرك الرقمي <br>
-            <span class="text-gradient">بجودة 8K.</span>
+            <span class="text-gradient drop-shadow-[0_0_30px_rgba(0,242,254,0.3)]">الأسطوري.</span>
         </h1>
         
-        <p class="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
-            كل ما تحتاجه من ألعاب، اشتراكات، حسابات، وخدمات رقمية في منصة واحدة احترافية. آمن، سريع، وموثوق.
+        <p class="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed font-light">
+            كل ما تحتاجه من ألعاب، اشتراكات، حسابات، وخدمات رقمية في منصة واحدة. آمن، سريع، وموثوق.
         </p>
         
-        <div class="flex flex-col sm:flex-row gap-4">
-            <a href="#categories" class="btn-primary px-10 py-4 rounded-xl text-lg flex items-center justify-center gap-2">
+        <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+            <a href="#categories" class="btn-primary px-10 py-4 rounded-xl text-lg flex items-center justify-center gap-2 w-full sm:w-auto">
                 <i class="fa-solid fa-store"></i> تصفح المتجر
             </a>
-            <button onclick="openAuthModal()" class="glass px-10 py-4 rounded-xl text-lg font-bold hover:bg-white/10 transition flex items-center justify-center gap-2">
-                <i class="fa-solid fa-right-to-bracket text-[#00f2fe]"></i> إنشاء حساب
+            <button onclick="openAuthModal()" class="glass px-10 py-4 rounded-xl text-lg font-bold hover:bg-white/10 transition flex items-center justify-center gap-2 w-full sm:w-auto border border-white/10">
+                <i class="fa-solid fa-right-to-bracket text-[#00f2fe]"></i> تسجيل الدخول
             </button>
         </div>
     </section>
 
-    <!-- شبكة الفئات (All Categories) -->
+    <!-- شبكة الفئات -->
     <section id="categories" class="py-20 px-6 relative z-10 max-w-7xl mx-auto">
         <div class="flex items-center gap-3 mb-10">
             <div class="w-2 h-8 bg-gradient-to-b from-[#00f2fe] to-[#4facfe] rounded-full"></div>
@@ -193,7 +211,7 @@
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
             
             <!-- 1. الألعاب -->
-            <div class="card-3d glass rounded-2xl overflow-hidden cursor-pointer" onclick="addToCart(1, 'شحن ألعاب (ببجي/فري فاير)', 15)">
+            <div class="card-3d glass rounded-2xl overflow-hidden cursor-pointer" onclick="addToCart(1, 'شحن ألعاب', 15)">
                 <div class="h-40 overflow-hidden relative">
                     <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=400" class="card-image w-full h-full object-cover opacity-80" alt="Games">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent"></div>
@@ -353,7 +371,7 @@
 
     <!-- الفوتر -->
     <footer class="border-t border-white/5 py-8 text-center text-gray-500 text-sm relative z-10">
-        <p>© 2025 Madara Store. جميع الحقوق محفوظة. صُنع بجودة 8K.</p>
+        <p>© 2025 MARO Store. جميع الحقوق محفوظة.</p>
     </footer>
 
     <!-- الشريط السفلي للموبايل -->
@@ -396,62 +414,41 @@
         </div>
     </div>
 
-    <!-- Modal تسجيل الدخول -->
+    <!-- Modal تسجيل الدخول (زي سهم) -->
     <div id="auth-modal" class="modal-overlay fixed inset-0 z-[150] flex items-center justify-center p-4">
-        <div class="modal-content glass w-full max-w-md rounded-3xl p-8 relative">
+        <div class="modal-content glass w-full max-w-sm rounded-3xl p-8 relative border border-white/10">
             <button onclick="closeAuthModal()" class="absolute top-6 left-6 w-8 h-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/20 transition"><i class="fa-solid fa-xmark"></i></button>
             
-            <div class="text-center mb-8">
-                <div class="w-16 h-16 bg-gradient-to-tr from-[#00f2fe] to-[#4facfe] rounded-2xl mx-auto flex items-center justify-center shadow-lg shadow-cyan-500/30 mb-4">
-                    <i class="fa-solid fa-user-astronaut text-black text-2xl"></i>
+            <div class="text-center mb-8 mt-4">
+                <div class="w-20 h-20 bg-gradient-to-tr from-[#00f2fe] to-[#4facfe] rounded-3xl mx-auto flex items-center justify-center shadow-[0_0_30px_rgba(0,242,254,0.4)] mb-5">
+                    <i class="fa-solid fa-user-astronaut text-black text-3xl"></i>
                 </div>
-                <h2 class="text-2xl font-black mb-2">مرحباً بعودتك</h2>
-                <p class="text-gray-400 text-sm">سجل دخولك للوصول إلى مشترياتك</p>
+                <h2 class="text-2xl font-black mb-2 text-white">مرحباً بك في MARO</h2>
+                <p class="text-gray-400 text-sm">سجل دخولك بضغطة واحدة للوصول إلى مشترياتك</p>
             </div>
 
-            <form onsubmit="event.preventDefault(); closeAuthModal();">
-                <div class="mb-4">
-                    <label class="block text-sm font-bold text-gray-300 mb-2">البريد الإلكتروني</label>
-                    <div class="relative">
-                        <i class="fa-regular fa-envelope absolute right-4 top-1/2 -translate-y-1/2 text-gray-500"></i>
-                        <input type="email" placeholder="you@example.com" class="w-full bg-black/50 border border-white/10 rounded-xl py-3 pr-12 pl-4 text-white focus:outline-none focus:border-[#00f2fe] transition" required>
-                    </div>
-                </div>
-                <div class="mb-6">
-                    <label class="block text-sm font-bold text-gray-300 mb-2">كلمة المرور</label>
-                    <div class="relative">
-                        <i class="fa-solid fa-lock absolute right-4 top-1/2 -translate-y-1/2 text-gray-500"></i>
-                        <input type="password" placeholder="••••••••" class="w-full bg-black/50 border border-white/10 rounded-xl py-3 pr-12 pl-4 text-white focus:outline-none focus:border-[#00f2fe] transition" required>
-                    </div>
-                </div>
-                <button type="submit" class="w-full btn-primary py-3 rounded-xl mb-4">تسجيل الدخول</button>
+            <!-- خيارات تسجيل الدخول السريع -->
+            <div class="space-y-4">
+                <button onclick="simulateLogin(this)" class="w-full bg-white text-black font-bold py-3.5 rounded-xl flex items-center justify-center gap-3 hover:bg-gray-200 transition shadow-lg">
+                    <img src="https://www.google.com/favicon.ico" class="w-5 h-5" alt="Google"> 
+                    تسجيل الدخول عبر Google
+                </button>
                 
-                <div class="text-center">
-                    <span class="text-gray-400 text-sm">ليس لديك حساب؟ </span>
-                    <a href="#" class="text-[#00f2fe] text-sm font-bold hover:underline">إنشاء حساب جديد</a>
+                <div class="relative flex py-2 items-center">
+                    <div class="flex-grow border-t border-white/10"></div>
+                    <span class="flex-shrink-0 mx-4 text-gray-500 text-xs font-bold">أو</span>
+                    <div class="flex-grow border-t border-white/10"></div>
                 </div>
-            </form>
-        </div>
-    </div>
 
-    <!-- Modal قناة تليجرام (زي الصورة) -->
-    <div id="channel-modal" class="modal-overlay fixed inset-0 z-[150] flex items-center justify-center p-4">
-        <div class="modal-content glass w-full max-w-sm rounded-[2rem] p-8 text-center relative shadow-2xl">
-            <button onclick="closeChannelModal()" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-black/20 flex items-center justify-center text-gray-400 hover:text-white transition"><i class="fa-solid fa-xmark"></i></button>
-            
-            <div class="w-24 h-24 mx-auto bg-white rounded-3xl flex items-center justify-center mb-6 shadow-xl border-4 border-white/10 overflow-hidden">
-                <!-- صورة القناة أو اللوجو -->
-                <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&q=80&w=200" alt="Channel" class="w-full h-full object-cover">
+                <button onclick="simulateLogin(this)" class="w-full btn-primary py-3.5 rounded-xl flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-bolt"></i>
+                    تسجيل الدخول السريع
+                </button>
             </div>
             
-            <h3 class="text-2xl font-black mb-2 text-white">تابع قنواتنا</h3>
-            <p class="text-gray-400 text-sm mb-8 leading-relaxed">انضم لقناتنا ليصلك كل جديد العروض والتحديثات والدعم الفني المباشر.</p>
-            
-            <a href="https://t.me/MadaraPUBGStore" target="_blank" rel="noopener noreferrer" class="w-full btn-primary py-4 rounded-xl text-lg flex items-center justify-center gap-2 mb-3" onclick="closeChannelModal()">
-                <i class="fa-brands fa-telegram"></i> قناة تيليجرام
-            </a>
-            
-            <button onclick="closeChannelModal()" class="text-sm text-gray-400 hover:text-white transition">إغلاق</button>
+            <p class="text-center text-[10px] text-gray-500 mt-6">
+                بالمتابعة، أنت توافق على شروط الخدمة وسياسة الخصوصية الخاصة بـ MARO.
+            </p>
         </div>
     </div>
 
@@ -463,9 +460,8 @@
             if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) { return false; }
         }
 
-        // --- إدارة المودال (Auth & Channel) ---
+        // --- إدارة المودال ---
         const authModal = document.getElementById('auth-modal');
-        const channelModal = document.getElementById('channel-modal');
 
         function openAuthModal() {
             authModal.classList.add('active');
@@ -474,23 +470,41 @@
             authModal.classList.remove('active');
         }
 
-        function openChannelModal() {
-            channelModal.classList.add('active');
-        }
-        function closeChannelModal() {
-            channelModal.classList.remove('active');
-        }
-
-        // إظهار مودال القناة بعد 3 ثواني من فتح الموقع
-        window.addEventListener('load', () => {
-            setTimeout(openChannelModal, 3000);
-        });
-
         // إغلاق المودال عند النقر في الخارج
         window.addEventListener('click', (e) => {
             if (e.target === authModal) closeAuthModal();
-            if (e.target === channelModal) closeChannelModal();
         });
+
+        // محاكاة تسجيل الدخول (زي سهم)
+        function simulateLogin(btn) {
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري تسجيل الدخول...';
+            
+            setTimeout(() => {
+                closeAuthModal();
+                btn.innerHTML = originalText;
+                
+                // تغيير شكل زرار تسجيل الدخول بعد الدخول
+                const loginBtns = document.querySelectorAll('.login-btn');
+                loginBtns.forEach(b => {
+                    b.innerHTML = '<i class="fa-solid fa-user-check text-green-400"></i> <span class="text-white">مارو</span>';
+                    b.classList.add('border-green-500/50');
+                    b.onclick = null; // تعطيل الزرار
+                });
+                
+                // إشعار بسيط
+                const toast = document.createElement('div');
+                toast.className = 'fixed top-24 left-1/2 -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-full font-bold z-[200] shadow-lg transition-opacity duration-300';
+                toast.innerHTML = 'تم تسجيل الدخول بنجاح! أهلاً بك يا مارو.';
+                document.body.appendChild(toast);
+                
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    setTimeout(() => toast.remove(), 300);
+                }, 3000);
+
+            }, 1000);
+        }
 
         // --- نظام السلة ---
         let cart = [];
@@ -568,7 +582,7 @@
                 return;
             }
             
-            let message = "مرحباً Madara Store،\nأريد طلب المنتجات التالية:\n\n";
+            let message = "مرحباً MARO Store،\nأريد طلب المنتجات التالية:\n\n";
             let totalPrice = 0;
             
             cart.forEach((item) => {
