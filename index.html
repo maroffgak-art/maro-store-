@@ -504,7 +504,6 @@
         appId: "1:55163169834:web:48ba5eda57e23c41886753"
     };
 
-    // 👇 ضع اسم المستخدم بتاعك في PayPal هنا (بدون @) 👇
     const PAYPAL_USERNAME = "YOUR_PAYPAL_USERNAME"; 
     const TELEGRAM_USERNAME = "qijub"; 
 
@@ -519,7 +518,6 @@
     let dynamicCategories = [];
     let currentFilter = "all";
     
-    // الأقسام الافتراضية (تستخدم إذا كانت قاعدة البيانات فارغة)
     const defaultCategories = [
       {id:"games", label:"الألعاب", icon:"game"},
       {id:"subscriptions", label:"الاشتراكات", icon:"play"},
@@ -635,15 +633,14 @@
         try {
             const querySnapshot = await getDocs(collection(db, "categories"));
             dynamicCategories = [];
-            querySnapshot.forEach((docSnap) => { // إصلاح اسم المتغير هنا
+            querySnapshot.forEach((docSnap) => {
                 dynamicCategories.push({ id: docSnap.id, ...docSnap.data() });
             });
-            // ترتيب الأقسام
             dynamicCategories.sort((a,b) => (a.order || 0) - (b.order || 0));
             renderCategories();
         } catch (e) {
             console.error("Error loading categories:", e);
-            dynamicCategories = defaultCategories; // fallback
+            dynamicCategories = defaultCategories;
             renderCategories();
         }
     }
@@ -652,7 +649,7 @@
         try {
             const querySnapshot = await getDocs(collection(db, "products"));
             products = [];
-            querySnapshot.forEach((docSnap) => { // إصلاح اسم المتغير هنا
+            querySnapshot.forEach((docSnap) => {
                 const data = docSnap.data();
                 products.push({
                     id: docSnap.id, 
@@ -667,8 +664,12 @@
             });
             renderProducts();
         } catch (e) { 
-            console.error(e); 
-            document.getElementById('loading-text').innerText = "حدث خطأ في تحميل المنتجات، يرجى تحديث الصفحة.";
+            console.error("Error loading products:", e); 
+            const loadingText = document.getElementById('loading-text');
+            if (loadingText) {
+                loadingText.innerText = "تعذر تحميل المنتجات. يرجى التأكد من صلاحيات قاعدة البيانات (Firestore Rules).";
+                loadingText.style.color = "var(--danger)";
+            }
         }
     }
 
@@ -679,10 +680,8 @@
         const tiles = $("[data-category-tiles]");
         const chips = $("[data-filter-chips]");
         
-        // الأقسام اللي رح تظهر (كل الأقسام ما عدا all)
         const displayCats = dynamicCategories.length > 0 ? dynamicCategories : defaultCategories;
 
-        // 1. رسم الكروت الكبيرة
         tiles.innerHTML = displayCats.map(c => `
             <button class="category-tile ${currentFilter === c.id ? 'is-active' : ''}" onclick="window.filterCategory('${c.id}')">
                 <span class="category-icon"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.7"/><rect x="14" y="4" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.7"/><rect x="4" y="14" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.7"/><rect x="14" y="14" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.7"/></svg></span>
@@ -690,7 +689,6 @@
             </button>
         `).join("");
 
-        // 2. رسم أزرار الفلترة (Chips)
         chips.innerHTML = `<button class="filter-chip ${currentFilter === 'all' ? 'is-active' : ''}" onclick="window.filterCategory('all')">الكل</button>` + 
             displayCats.map(c => `
                 <button class="filter-chip ${currentFilter === c.id ? 'is-active' : ''}" onclick="window.filterCategory('${c.id}')">${c.label}</button>
@@ -699,10 +697,8 @@
 
     window.filterCategory = (id) => {
         currentFilter = id;
-        renderCategories(); // لتحديث حالة الـ active
+        renderCategories();
         renderProducts();
-        
-        // سكرول للمنتجات عشان يشوف النتيجة
         document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
     };
 
@@ -723,12 +719,10 @@
         $("[data-result-count]").textContent = `${filtered.length} منتج`;
 
         grid.innerHTML = filtered.map(p => {
-            // تحديد القسم المناسب
             const catLabel = dynamicCategories.find(c => c.id === p.category)?.label || 
                              defaultCategories.find(c => c.id === p.category)?.label || 
                              "منتجات";
             
-            // عرض الصورة إذا وجدت أو الأيقونة الافتراضية
             const artContent = p.image 
                 ? `<img src="${p.image}" alt="${p.name}" loading="lazy">` 
                 : `<span class="product-illustration"><svg viewBox="0 0 24 24" fill="none"><path d="m12 3 1.6 6.4L20 11l-6.4 1.6L12 19l-1.6-6.4L4 11l6.4-1.6L12 3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></span>`;
@@ -796,13 +790,11 @@
             
             const total = cart.reduce((s, i) => s + (i.price * i.qty), 0);
             
-            // 1. إرسال رسالة تليجرام
             let msg = "مرحباً MARO، أريد إتمام طلب:\n";
             cart.forEach(i => msg += `- ${i.name} (${i.qty})\n`);
             msg += `\nالمجموع: $${total}\nيرجى تأكيد الطلب.";
             window.open(`https://t.me/${TELEGRAM_USERNAME}?text=${encodeURIComponent(msg)}`, '_blank');
 
-            // 2. تحويل العميل لصفحة PayPal مع تمرير المبلغ
             setTimeout(() => {
                 const paypalUrl = `https://paypal.me/${PAYPAL_USERNAME}/${total}`;
                 window.location.href = paypalUrl;
