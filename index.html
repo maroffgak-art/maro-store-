@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MARO | متجر الشحن الرقمي</title>
+    <title>Sahm Store | شحن ألعاب وتطبيقات</title>
     
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https:; connect-src 'self' https://api.telegram.org;">
     
@@ -15,35 +15,53 @@
     
     <style>
         :root {
-            --bg-main: #060d1b; 
-            --bg-card: #0b1528; 
-            --bg-card-bottom: #101f3d; 
-            --primary: #00f2fe;
+            --bg-page: #f8fafc;
+            --bg-card: #ffffff;
+            --bg-card-bottom: #0b1528;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --primary: #0068e8;
+            --primary-glow: rgba(0, 104, 232, 0.2);
+        }
+
+        body.dark-mode {
+            --bg-page: #060d1b;
+            --bg-card: #0b1528;
+            --bg-card-bottom: #101f3d;
             --text-main: #ffffff;
             --text-muted: #8ba3c7;
             --border-color: #1a2c4e;
+            --primary: #00f2fe;
+            --primary-glow: rgba(0, 242, 254, 0.2);
         }
 
         body {
             font-family: 'Cairo', sans-serif;
-            background-color: var(--bg-main);
+            background-color: var(--bg-page);
             color: var(--text-main);
+            transition: background-color 0.3s, color 0.3s;
             overflow-x: hidden;
             -webkit-user-select: none; 
             -webkit-touch-callout: none; 
             user-select: none;
         }
 
+        /* الهيدر */
         .header-glass {
-            background: rgba(6, 13, 27, 0.9);
-            backdrop-filter: blur(10px);
+            background: var(--bg-page);
             border-bottom: 1px solid var(--border-color);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 40;
         }
 
+        /* البحث */
         .search-input {
-            background: #0b1528;
+            background: var(--bg-card);
             border: 1px solid var(--border-color);
-            color: white;
+            color: var(--text-main);
             border-radius: 12px;
             padding: 10px 16px 10px 40px;
             width: 100%;
@@ -52,9 +70,10 @@
         .search-input:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
+            box-shadow: 0 0 10px var(--primary-glow);
         }
 
+        /* كارت التطبيق */
         .app-card {
             background: var(--bg-card);
             border-radius: 16px;
@@ -125,102 +144,65 @@
 <body class="pb-24 md:pb-0">
 
     <!-- الهيدر -->
-    <header class="fixed top-0 w-full z-40 header-glass transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center gap-2">
+    <header class="header-glass transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center gap-2">
             <!-- اللوجو -->
             <a href="#" onclick="goHome()" class="flex items-center gap-2 min-w-fit">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#00f2fe] to-[#4facfe] flex items-center justify-center shadow-lg shadow-cyan-500/20">
-                    <i class="fa-solid fa-cube text-black text-lg"></i>
+                <div class="w-10 h-10 rounded-xl bg-[#0068e8] flex items-center justify-center shadow-lg">
+                    <i class="fa-solid fa-cart-shopping text-white text-lg"></i>
                 </div>
-                <span class="text-xl font-black tracking-widest text-white hidden sm:block">MARO<span class="text-[#00f2fe]">.</span></span>
+                <span class="text-xl font-black tracking-widest text-[var(--text-main)] hidden sm:block">SAHM<span class="text-[#0068e8]">.</span></span>
             </a>
 
             <!-- خانة البحث -->
             <div class="flex-1 max-w-md relative">
-                <input type="text" class="search-input" placeholder="ابحث عن قسم أو تطبيق...">
-                <i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"></i>
+                <input type="text" id="searchInput" class="search-input" placeholder="ابحث عن قسم أو تطبيق..." onkeyup="filterSearch()">
+                <i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]"></i>
             </div>
             
             <!-- الأزرار -->
             <div class="flex items-center gap-2">
-                <a href="https://t.me/qijub" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full bg-[#0b1528] border border-[#1a2c4e] flex items-center justify-center hover:bg-white/10 transition">
-                    <i class="fa-brands fa-telegram text-[#00f2fe]"></i>
+                <!-- زرار الوضع الليلي -->
+                <button onclick="toggleTheme()" class="w-10 h-10 rounded-full bg-[var(--bg-card)] border border-[var(--border-color)] flex items-center justify-center hover:opacity-80 transition">
+                    <i id="theme-icon" class="fa-solid fa-moon text-[var(--text-main)]"></i>
+                </button>
+
+                <a href="https://t.me/qijub" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full bg-[var(--bg-card)] border border-[var(--border-color)] flex items-center justify-center hover:opacity-80 transition">
+                    <i class="fa-brands fa-telegram text-[#0068e8]"></i>
                 </a>
                 
-                <button onclick="toggleCart()" class="relative w-10 h-10 rounded-full bg-[#0b1528] border border-[#1a2c4e] flex items-center justify-center hover:bg-white/10 transition">
-                    <i class="fa-solid fa-cart-shopping text-white"></i>
-                    <span id="cart-count" class="absolute -top-1 -right-1 w-5 h-5 bg-[#00f2fe] text-black text-xs font-black flex items-center justify-center rounded-full">0</span>
+                <button onclick="toggleCart()" class="relative w-10 h-10 rounded-full bg-[var(--bg-card)] border border-[var(--border-color)] flex items-center justify-center hover:opacity-80 transition">
+                    <i class="fa-solid fa-cart-shopping text-[var(--text-main)]"></i>
+                    <span id="cart-count" class="absolute -top-1 -right-1 w-5 h-5 bg-[#0068e8] text-white text-xs font-black flex items-center justify-center rounded-full">0</span>
                 </button>
             </div>
         </div>
     </header>
 
     <!-- المحتوى -->
-    <main class="max-w-7xl mx-auto px-4 mt-28 relative z-10">
+    <main class="max-w-7xl mx-auto px-4 mt-24 relative z-10">
         
         <!-- الصفحة الرئيسية (الفئات) -->
         <div id="view-home" class="view-section active">
-            <div class="flex items-center justify-between mb-6 bg-[#0b1528] border border-[#1a2c4e] rounded-xl p-4">
+            <div class="flex items-center justify-between mb-6 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl p-4 mt-4">
                 <h2 class="text-lg font-bold">كل الأقسام</h2>
-                <i class="fa-solid fa-layer-group text-[#00f2fe]"></i>
+                <i class="fa-solid fa-layer-group text-[#0068e8]"></i>
             </div>
 
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
-                <!-- قسم الألعاب -->
-                <div class="app-card" onclick="openCategory('games')">
-                    <div class="app-logo bg-gradient-to-br from-orange-500 to-red-600">
-                        <i class="fa-solid fa-gamepad"></i>
-                    </div>
-                    <div class="app-info">
-                        <div class="app-title">قسم الألعاب</div>
-                        <div class="app-price">تصفح</div>
-                    </div>
-                </div>
-
-                <!-- قسم التطبيقات -->
-                <div class="app-card" onclick="openCategory('apps')">
-                    <div class="app-logo bg-gradient-to-br from-purple-500 to-pink-500">
-                        <i class="fa-solid fa-mobile-screen"></i>
-                    </div>
-                    <div class="app-info">
-                        <div class="app-title">قسم التطبيقات</div>
-                        <div class="app-price">تصفح</div>
-                    </div>
-                </div>
-
-                <!-- قسم الاشتراكات -->
-                <div class="app-card" onclick="openCategory('subs')">
-                    <div class="app-logo bg-gradient-to-br from-blue-500 to-cyan-400">
-                        <i class="fa-solid fa-play"></i>
-                    </div>
-                    <div class="app-info">
-                        <div class="app-title">الاشتراكات</div>
-                        <div class="app-price">تصفح</div>
-                    </div>
-                </div>
-                
-                <!-- قسم السوشيال ميديا -->
-                <div class="app-card" onclick="openCategory('social')">
-                    <div class="app-logo bg-gradient-to-br from-blue-600 to-indigo-600">
-                        <i class="fa-solid fa-thumbs-up"></i>
-                    </div>
-                    <div class="app-info">
-                        <div class="app-title">سوشيال ميديا</div>
-                        <div class="app-price">تصفح</div>
-                    </div>
-                </div>
+            <div id="home-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
+                <!-- سيتم توليد الفئات هنا -->
             </div>
         </div>
 
-        <!-- صفحة تفاصيل القسم (مثلاً الألعاب) -->
-        <div id="view-category" class="view-section">
-            <div class="flex items-center gap-3 mb-6 bg-[#0b1528] border border-[#1a2c4e] rounded-xl p-4 cursor-pointer hover:bg-white/5 transition" onclick="goHome()">
-                <i class="fa-solid fa-arrow-right text-[#00f2fe]"></i>
+        <!-- صفحة تفاصيل القسم -->
+        <div id="view-category" class="view-section mt-4">
+            <div class="flex items-center gap-3 mb-6 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl p-4 cursor-pointer hover:bg-black/5 transition" onclick="goHome()">
+                <i class="fa-solid fa-arrow-right text-[#0068e8]"></i>
                 <h2 id="category-title" class="text-lg font-bold">اسم القسم</h2>
             </div>
 
             <div id="category-items" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
-                <!-- العناصر هتتولد هنا بالجافاسكريبت -->
+                <!-- العناصر هتتولد هنا -->
             </div>
         </div>
 
@@ -228,29 +210,29 @@
 
     <!-- سلة المشتريات -->
     <div id="cart-drawer" class="fixed inset-y-0 right-0 w-full md:w-96 shadow-2xl z-[100] transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
-        <div class="p-6 border-b border-[#1a2c4e] flex justify-between items-center bg-[#0b1528]">
-            <h3 class="text-xl font-black flex items-center gap-2"><i class="fa-solid fa-cart-shopping text-[#00f2fe]"></i> سلة المشتريات</h3>
-            <button onclick="toggleCart()" class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-red-500 transition"><i class="fa-solid fa-xmark"></i></button>
+        <div class="p-6 border-b border-[var(--border-color)] flex justify-between items-center bg-[var(--bg-card)]">
+            <h3 class="text-xl font-black flex items-center gap-2"><i class="fa-solid fa-cart-shopping text-[#0068e8]"></i> سلة المشتريات</h3>
+            <button onclick="toggleCart()" class="w-8 h-8 rounded-full bg-black/10 flex items-center justify-center hover:bg-red-500 transition"><i class="fa-solid fa-xmark"></i></button>
         </div>
-        <div id="cart-items" class="flex-1 p-6 overflow-y-auto flex flex-col gap-4 bg-[#060d1b]">
-            <div class="text-center text-gray-500 mt-10">السلة فارغة حالياً</div>
+        <div id="cart-items" class="flex-1 p-6 overflow-y-auto flex flex-col gap-4 bg-[var(--bg-page)]">
+            <div class="text-center text-[var(--text-muted)] mt-10">السلة فارغة حالياً</div>
         </div>
-        <div class="p-6 border-t border-[#1a2c4e] bg-[#0b1528]">
+        <div class="p-6 border-t border-[var(--border-color)] bg-[var(--bg-card)]">
             <div class="flex justify-between items-center mb-4 text-xl font-black">
                 <span>المجموع الكلي:</span>
-                <span id="cart-total" class="text-[#00f2fe]">$0</span>
+                <span id="cart-total" class="text-[#0068e8]">$0</span>
             </div>
-            <button onclick="checkout()" class="w-full bg-gradient-to-r from-[#00f2fe] to-[#4facfe] text-black py-4 rounded-xl font-black text-lg mb-2 hover:opacity-90 transition">أرسل طلبك إلى تليجرام</button>
+            <button onclick="checkout()" class="w-full bg-[#0068e8] text-white py-4 rounded-xl font-black text-lg mb-2 hover:opacity-90 transition shadow-lg">أرسل طلبك إلى تليجرام</button>
         </div>
     </div>
 
-    <!-- نافذة الباقات (Modal) -->
+    <!-- نافذة الباقات -->
     <div id="sub-modal" class="modal-overlay">
         <div class="modal-content">
-            <button onclick="closeSubMenu()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-red-500 transition text-white"><i class="fa-solid fa-xmark"></i></button>
+            <button onclick="closeSubMenu()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-black/10 flex items-center justify-center hover:bg-red-500 transition text-[var(--text-main)]"><i class="fa-solid fa-xmark"></i></button>
             
-            <div id="modal-icon" class="w-20 h-20 mx-auto rounded-2xl flex items-center justify-center text-4xl mb-4 shadow-lg border-2 border-[#00f2fe] text-white"></div>
-            <h3 id="modal-title" class="text-2xl font-black mb-6 text-white text-center">اسم التطبيق</h3>
+            <div id="modal-icon" class="w-20 h-20 mx-auto rounded-2xl flex items-center justify-center text-4xl mb-4 shadow-lg border-2 border-[#0068e8] text-white"></div>
+            <h3 id="modal-title" class="text-2xl font-black mb-6 text-[var(--text-main)] text-center">اسم التطبيق</h3>
             
             <div id="modal-options" class="flex flex-col gap-3">
                 <!-- الخيارات هتتولد هنا -->
@@ -259,7 +241,7 @@
     </div>
 
     <script>
-        // --- البيانات (الداتا بيز بتاعتنا) ---
+        // --- البيانات (قابلة للتعديل) ---
         const storeData = {
             games: {
                 title: "قسم الألعاب",
@@ -307,10 +289,59 @@
             likes: { title: "لايكات", options: [{ name: '1000 لايك', price: 1 }, { name: '5000 لايك', price: 4 }] }
         };
 
+        // --- الوضع الليلي ---
+        function toggleTheme() {
+            const body = document.body;
+            const icon = document.getElementById('theme-icon');
+            body.classList.toggle('dark-mode');
+            if (body.classList.contains('dark-mode')) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                localStorage.setItem('sahm-theme', 'dark');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                localStorage.setItem('sahm-theme', 'light');
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const saved = localStorage.getItem('sahm-theme');
+            if (saved === 'dark') {
+                document.body.classList.add('dark-mode');
+                document.getElementById('theme-icon').classList.remove('fa-moon');
+                document.getElementById('theme-icon').classList.add('fa-sun');
+            }
+            renderHome();
+        });
+
         // --- التنقل بين الصفحات ---
         function goHome() {
             document.getElementById('view-home').classList.add('active');
             document.getElementById('view-category').classList.remove('active');
+            document.getElementById('searchInput').value = '';
+            renderHome();
+        }
+
+        function renderHome() {
+            const grid = document.getElementById('home-grid');
+            grid.innerHTML = '';
+            for (let key in storeData) {
+                const cat = storeData[key];
+                const card = document.createElement('div');
+                card.className = 'app-card';
+                card.onclick = () => openCategory(key);
+                card.innerHTML = `
+                    <div class="app-logo bg-[#0068e8]">
+                        <i class="fa-solid fa-layer-group"></i>
+                    </div>
+                    <div class="app-info">
+                        <div class="app-title">${cat.title}</div>
+                        <div class="app-price">تصفح</div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            }
         }
 
         function openCategory(categoryKey) {
@@ -343,6 +374,27 @@
             window.scrollTo(0, 0);
         }
 
+        // --- البحث ---
+        function filterSearch() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const viewHome = document.getElementById('view-home');
+            const viewCat = document.getElementById('view-category');
+            
+            if (viewHome.classList.contains('active')) {
+                const cards = document.querySelectorAll('#home-grid .app-card');
+                cards.forEach(card => {
+                    const title = card.querySelector('.app-title').innerText.toLowerCase();
+                    card.style.display = title.includes(query) ? '' : 'none';
+                });
+            } else {
+                const cards = document.querySelectorAll('#category-items .app-card');
+                cards.forEach(card => {
+                    const title = card.querySelector('.app-title').innerText.toLowerCase();
+                    card.style.display = title.includes(query) ? '' : 'none';
+                });
+            }
+        }
+
         // --- نافذة الباقات ---
         const subModal = document.getElementById('sub-modal');
         const modalTitle = document.getElementById('modal-title');
@@ -356,31 +408,29 @@
             modalTitle.innerText = pkg.title;
             modalOptions.innerHTML = '';
             
-            // هناخد لون الأيقونة من البيانات عشان تبان حلوة في المودال
-            let iconClass = 'fa-box text-[#00f2fe]';
-            let bgClass = 'bg-[#0b1528]';
+            let iconClass = 'fa-box';
+            let bgClass = 'bg-[#0068e8]';
             
-            // تدوير على العنصر عشان نجيب اللون بتاعه
             for(let key in storeData) {
                 let found = storeData[key].items.find(i => i.id === itemId);
                 if(found) {
-                    iconClass = `fa-solid ${found.icon}`;
+                    iconClass = found.icon;
                     bgClass = found.color;
                     break;
                 }
             }
             
-            modalIcon.className = `w-20 h-20 mx-auto rounded-2xl flex items-center justify-center text-4xl mb-4 shadow-lg border-2 border-[#00f2fe] text-white ${bgClass}`;
-            modalIcon.innerHTML = `<i class="${iconClass}"></i>`;
+            modalIcon.className = `w-20 h-20 mx-auto rounded-2xl flex items-center justify-center text-4xl mb-4 shadow-lg border-2 border-[#0068e8] text-white ${bgClass}`;
+            modalIcon.innerHTML = `<i class="fa-solid ${iconClass}"></i>`;
 
             pkg.options.forEach(opt => {
                 const btn = document.createElement('button');
-                btn.className = 'w-full flex justify-between items-center p-4 rounded-xl border border-[#1a2c4e] hover:border-[#00f2fe] transition bg-[#0b1528]';
+                btn.className = 'w-full flex justify-between items-center p-4 rounded-xl border border-[var(--border-color)] hover:border-[#0068e8] transition bg-[var(--bg-page)]';
                 btn.innerHTML = `
-                    <span class="font-bold text-white">${opt.name}</span>
+                    <span class="font-bold text-[var(--text-main)]">${opt.name}</span>
                     <div class="flex items-center gap-3">
-                        <span class="text-[#00f2fe] font-black">$${opt.price}</span>
-                        <i class="fa-solid fa-plus text-xs bg-[#00f2fe] text-black w-6 h-6 rounded-full flex items-center justify-center"></i>
+                        <span class="text-[#0068e8] font-black">$${opt.price}</span>
+                        <i class="fa-solid fa-plus text-xs bg-[#0068e8] text-white w-6 h-6 rounded-full flex items-center justify-center"></i>
                     </div>
                 `;
                 btn.onclick = () => {
@@ -401,7 +451,7 @@
             if (e.target === subModal) closeSubMenu();
         });
 
-        // --- نظام السلة ---
+        // --- السلة ---
         let cart = [];
         const cartDrawer = document.getElementById('cart-drawer');
         const cartItemsContainer = document.getElementById('cart-items');
@@ -448,22 +498,22 @@
             
             cartItemsContainer.innerHTML = '';
             if (cart.length === 0) {
-                cartItemsContainer.innerHTML = '<div class="text-center text-gray-500 mt-10">السلة فارغة حالياً</div>';
+                cartItemsContainer.innerHTML = '<div class="text-center text-[var(--text-muted)] mt-10">السلة فارغة حالياً</div>';
                 return;
             }
 
             cart.forEach(item => {
                 const div = document.createElement('div');
-                div.className = 'bg-[#0b1528] border border-[#1a2c4e] p-4 rounded-xl flex flex-col gap-3';
+                div.className = 'bg-[var(--bg-card)] border border-[var(--border-color)] p-4 rounded-xl flex flex-col gap-3';
                 
                 div.innerHTML = `
                     <div class="flex justify-between items-start">
-                        <div class="font-bold text-sm text-white">${item.name}</div>
-                        <div class="text-[#00f2fe] font-black">$${(item.price * item.qty).toFixed(3)}</div>
+                        <div class="font-bold text-sm text-[var(--text-main)]">${item.name}</div>
+                        <div class="text-[#0068e8] font-black">$${(item.price * item.qty).toFixed(3)}</div>
                     </div>
-                    <div class="flex items-center justify-between bg-[#060d1b] rounded-lg p-1 border border-[#1a2c4e]">
+                    <div class="flex items-center justify-between bg-[var(--bg-page)] rounded-lg p-1 border border-[var(--border-color)]">
                         <button onclick="decreaseQty('${item.id}')" class="w-8 h-8 flex items-center justify-center hover:bg-red-500/20 text-red-400 rounded-md transition"><i class="fa-solid fa-minus"></i></button>
-                        <span class="font-bold text-white">${item.qty}</span>
+                        <span class="font-bold text-[var(--text-main)]">${item.qty}</span>
                         <button onclick="increaseQty('${item.id}')" class="w-8 h-8 flex items-center justify-center hover:bg-green-500/20 text-green-400 rounded-md transition"><i class="fa-solid fa-plus"></i></button>
                     </div>
                 `;
@@ -477,7 +527,7 @@
                 return;
             }
             
-            let message = "مرحباً MARO Store،\nأريد طلب المنتجات التالية:\n\n";
+            let message = "مرحباً Sahm Store،\nأريد طلب المنتجات التالية:\n\n";
             let totalPrice = 0;
             
             cart.forEach((item) => {
