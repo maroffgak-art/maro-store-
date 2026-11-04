@@ -4,11 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#080c15">
+  <meta name="description" content="Maro — متجر رقمي عربي لمنتجات الألعاب والاشتراكات والخدمات الرقمية.">
   
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'none'; object-src 'none'; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://cdnjs.cloudflare.com https://apis.google.com; connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://*.firebaseapp.com; form-action 'self' https://*.firebaseapp.com https://accounts.google.com; frame-src 'self' https://*.firebaseapp.com https://accounts.google.com; upgrade-insecure-requests">
   
   <title>MARO — سوقك الرقمي</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+  
   <style>
     :root {
       color-scheme: dark;
@@ -26,7 +28,7 @@
     }
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; scroll-padding-top: 96px; }
-    body { margin: 0; min-width: 320px; background: var(--bg); color: var(--text); font-family: 'Cairo', system-ui, sans-serif; line-height: 1.6; transition: background .25s ease, color .25s ease; }
+    body { margin: 0; min-width: 320px; background: var(--bg); color: var(--text); font-family: 'Cairo', system-ui, -apple-system, sans-serif; line-height: 1.6; transition: background .25s ease, color .25s ease; }
     body.locked { overflow: hidden; }
     button, input, select { font: inherit; }
     button { color: inherit; }
@@ -34,6 +36,7 @@
     svg { display: block; }
     .shell { width: min(var(--shell), calc(100% - 40px)); margin-inline: auto; }
     
+    /* Header */
     .site-header { position: sticky; z-index: 35; inset-block-start: 0; background: color-mix(in srgb, var(--bg) 84%, transparent); border-bottom: 1px solid var(--line); backdrop-filter: blur(18px); }
     .header-row { min-height: 76px; display: flex; align-items: center; gap: 24px; }
     .brand { display: inline-flex; align-items: center; gap: 10px; min-width: 150px; }
@@ -42,73 +45,113 @@
     .brand-name { font-size: 21px; line-height: 1; font-weight: 950; letter-spacing: 1.2px; direction: ltr; }
     .brand-name span { color: var(--cyan); }
     .brand-sub { display: block; margin-top: 4px; color: var(--soft); font-size: 9px; font-weight: 650; letter-spacing: .4px; }
+    
     .main-nav { display: flex; align-items: center; gap: 22px; margin-inline-start: auto; color: var(--muted); font-size: 12px; font-weight: 750; white-space: nowrap; }
     .main-nav a { padding: 8px 0; transition: color .2s ease; }
     .main-nav a:hover, .main-nav a[aria-current="page"] { color: var(--cyan); }
+    
     .header-tools { display: flex; align-items: center; gap: 8px; }
     .search-box { width: clamp(150px, 19vw, 230px); height: 42px; display: flex; align-items: center; gap: 8px; padding: 0 12px; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); color: var(--soft); }
     .search-box svg { width: 17px; height: 17px; flex: 0 0 auto; }
     .search-box input { width: 100%; min-width: 0; border: 0; outline: 0; color: var(--text); background: transparent; font-size: 11px; }
-    .search-box input::placeholder { color: var(--soft); }
-    .icon-button, .button { min-height: 42px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 0 13px; border: 1px solid var(--line-strong); border-radius: 14px; background: var(--panel); color: var(--text); cursor: pointer; transition: transform .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease; }
+    
+    .icon-button, .button { min-height: 42px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 0 13px; border: 1px solid var(--line-strong); border-radius: 14px; background: var(--panel); color: var(--text); cursor: pointer; transition: transform .18s ease, border-color .18s ease; }
     .icon-button { width: 42px; padding: 0; position: relative; }
-    .icon-button svg, .button svg { width: 17px; height: 17px; }
+    .icon-button svg { width: 17px; height: 17px; }
     .icon-button:hover, .button:hover { transform: translateY(-2px); border-color: rgba(64,224,220,.5); }
-    .icon-button[data-open-search] { display: none; }
+    
     .button-primary { border-color: transparent; color: #061216; background: linear-gradient(105deg,var(--cyan),#76d8ed 55%,#92a8ff); box-shadow: 0 10px 26px rgba(38,190,194,.2); font-size: 12px; font-weight: 900; }
     .button-primary:hover { box-shadow: 0 12px 32px rgba(38,190,194,.3); }
+    
     .cart-count { min-width: 18px; height: 18px; display: grid; place-items: center; padding-inline: 4px; position: absolute; inset-block-start: -5px; inset-inline-start: -5px; border: 2px solid var(--bg); border-radius: 50px; color: #061216; background: var(--cyan); font-size: 9px; font-weight: 900; }
-    .mobile-search-panel { display: none; padding: 0 0 12px; }
-    .mobile-search-panel .search-box { width: 100%; }
-    .menu-panel { display: none; position: absolute; inset-inline: 20px; inset-block-start: calc(100% + 8px); padding: 14px; border: 1px solid var(--line-strong); border-radius: 18px; background: var(--panel); box-shadow: var(--shadow); }
+    
+    .menu-panel { display: none; position: absolute; inset-inline: 20px; inset-block-start: calc(100% + 8px); padding: 14px; border: 1px solid var(--line-strong); border-radius: 18px; background: var(--panel); box-shadow: var(--shadow); z-index: 50; }
     .menu-panel.is-open { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
     .menu-panel a, .menu-panel button { padding: 10px; border-radius: 11px; color: var(--muted); background: var(--panel-2); font-size: 12px; text-align: right; border: 0; cursor: pointer; width: 100%; font-family: inherit; font-weight: 700; }
     .menu-panel a:hover, .menu-panel button:hover { color: var(--cyan); background: var(--panel-3); }
-    
+
+    /* Hero */
     .hero { position: relative; padding: 58px 0 34px; overflow: clip; }
+    .hero::before { content: ""; position: absolute; z-index: -1; width: 720px; height: 500px; inset-block-start: -150px; inset-inline-start: -230px; border-radius: 50%; background: radial-gradient(ellipse,rgba(43,190,200,.15),rgba(84,139,255,.05) 45%,transparent 72%); filter: blur(12px); }
     .hero-grid { display: grid; grid-template-columns: 1.05fr .95fr; align-items: center; gap: clamp(24px,5vw,68px); }
+    .hero-copy-wrap { text-align: right; }
+    .eyebrow { width: fit-content; display: flex; align-items: center; gap: 8px; padding: 7px 12px; border: 1px solid rgba(64,224,220,.19); border-radius: 99px; color: var(--cyan); background: rgba(64,224,220,.075); font-size: 10px; font-weight: 850; }
+    .eyebrow-mark { width: 7px; height: 7px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 12px var(--cyan); }
     h1 { max-width: 620px; margin: 17px 0 12px; font-size: clamp(40px,6.1vw,70px); font-weight: 950; letter-spacing: -1.8px; line-height: 1.08; }
     .gradient-text { color: transparent; background: linear-gradient(95deg,var(--cyan),#8caeff 53%,var(--violet)); background-clip: text; -webkit-background-clip: text; }
+    .hero-copy { max-width: 500px; margin: 0; color: var(--muted); font-size: 14px; line-height: 1.9; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
     
+    /* Sections */
     .section { padding: 38px 0; }
     .section-head { display: flex; align-items: end; justify-content: space-between; gap: 18px; margin-bottom: 18px; }
-    h2 { margin: 0; font-size: clamp(24px,3vw,34px); line-height: 1.25; }
-    .category-row { display: grid; grid-template-columns: repeat(6,minmax(0,1fr)); gap: 10px; }
-    .category-tile { min-height: 88px; display: flex; align-items: center; gap: 10px; padding: 12px; border: 1px solid var(--line); border-radius: 17px; background: var(--panel); text-align: right; cursor: pointer; transition: transform .2s ease; }
-    .category-tile:hover, .category-tile.is-active { transform: translateY(-2px); border-color: rgba(64,224,220,.48); background: var(--panel-2); }
-    .category-icon { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 12px; color: var(--cyan); background: rgba(64,224,220,.085); }
+    h2 { margin: 0; font-size: clamp(24px,3vw,34px); line-height: 1.25; letter-spacing: -.6px; }
     
+    /* Category Grid */
+    .category-row { display: grid; grid-template-columns: repeat(6,minmax(0,1fr)); gap: 10px; }
+    .category-tile { min-height: 88px; display: flex; align-items: center; gap: 10px; padding: 12px; border: 1px solid var(--line); border-radius: 17px; background: var(--panel); text-align: right; cursor: pointer; transition: transform .2s; }
+    .category-tile:hover, .category-tile.is-active { transform: translateY(-2px); border-color: rgba(64,224,220,.48); background: var(--panel-2); }
+    .category-icon { width: 38px; height: 38px; display: grid; place-items: center; flex: 0 0 auto; border-radius: 12px; color: var(--cyan); background: rgba(64,224,220,.085); }
+    .category-icon svg { width: 20px; height: 20px; }
+    .category-tile strong { display: block; font-size: 10px; line-height: 1.4; }
+    
+    /* Products Grid */
     .products-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 13px; }
     .product-card { min-width: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 19px; background: var(--panel); transition: transform .23s ease; }
     .product-card:hover { transform: translateY(-4px); border-color: rgba(64,224,220,.35); }
-    .product-art { height: 148px; position: relative; display: grid; place-items: center; overflow: hidden; background: linear-gradient(145deg,#122c44,#171635); }
+    .product-art { height: 148px; position: relative; display: grid; place-items: center; overflow: hidden; isolation: isolate; background: linear-gradient(145deg,#122c44,#171635); }
+    .product-illustration { width: 76px; height: 76px; display: grid; place-items: center; border: 1px solid rgba(224,240,255,.2); border-radius: 24px; color: var(--cyan); background: rgba(7,14,26,.48); transform: rotate(-4deg); }
+    .product-illustration svg { width: 39px; height: 39px; }
     .product-body { padding: 12px; }
-    .product-title { min-height: 38px; margin: 7px 0 3px; font-size: 12px; font-weight: 900; }
+    .product-title { min-height: 38px; margin: 7px 0 3px; font-size: 12px; font-weight: 900; line-height: 1.55; }
+    .product-footer { display: flex; align-items: end; justify-content: space-between; gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); }
     .price { color: var(--cyan); font-size: 17px; font-weight: 950; direction: ltr; }
     .add-button { min-height: 36px; display: inline-flex; align-items: center; justify-content: center; padding: 0 10px; border: 0; border-radius: 11px; color: #07151a; background: linear-gradient(105deg,var(--cyan),#91dcf4); font-size: 9px; font-weight: 900; cursor: pointer; }
     
-    .drawer-backdrop { position: fixed; z-index: 70; inset: 0; visibility: hidden; opacity: 0; background: rgba(2,5,10,.62); backdrop-filter: blur(4px); transition: opacity .22s ease; }
-    .drawer-backdrop.is-open { visibility: visible; opacity: 1; }
+    /* Modals & Overlays */
+    .drawer-backdrop, .modal-backdrop { position: fixed; z-index: 70; inset: 0; visibility: hidden; opacity: 0; background: rgba(2,5,10,.62); backdrop-filter: blur(4px); transition: opacity .22s ease; }
+    .drawer-backdrop.is-open, .modal-backdrop.is-open { visibility: visible; opacity: 1; display: grid; place-items: center; }
+    
     .cart-drawer { width: min(440px,100%); height: 100%; display: flex; flex-direction: column; position: absolute; inset-block: 0; inset-inline-start: 0; border-inline-end: 1px solid var(--line-strong); background: var(--bg-soft); box-shadow: var(--shadow); transform: translateX(-105%); transition: transform .28s; }
     html[dir="rtl"] .cart-drawer { transform: translateX(105%); }
     .drawer-backdrop.is-open .cart-drawer { transform: translateX(0); }
     .drawer-head { display: flex; align-items: center; justify-content: space-between; padding: 18px; border-bottom: 1px solid var(--line); }
+    .drawer-items { flex: 1; overflow: auto; display: grid; align-content: start; gap: 9px; padding: 14px; }
     
-    .modal-backdrop { position: fixed; z-index: 85; inset: 0; display: none; place-items: center; padding: 18px; background: rgba(2,5,10,.68); backdrop-filter: blur(5px); }
-    .modal-backdrop.is-open { display: grid; }
     .modal-card { width: min(440px,100%); max-height: min(86dvh,680px); overflow: auto; border: 1px solid var(--line-strong); border-radius: 22px; background: var(--bg-soft); box-shadow: var(--shadow); padding: 24px; }
+    
+    /* Form Inputs */
     .input-field { width: 100%; padding: 12px 16px; background: var(--panel); border: 1px solid var(--line-strong); border-radius: 12px; color: var(--text); margin-bottom: 16px; outline: none; transition: border-color 0.2s; }
     .input-field:focus { border-color: var(--cyan); }
     .input-label { display: block; font-size: 12px; font-weight: 700; color: var(--muted); margin-bottom: 6px; text-align: right; }
 
+    /* Mobile Dock */
+    .mobile-dock { display: none; grid-template-columns: repeat(4,1fr); gap: 4px; position: fixed; z-index: 55; inset-inline: 9px; inset-block-end: calc(8px + env(safe-area-inset-bottom)); padding: 8px 7px; border: 1px solid var(--line-strong); border-radius: 20px; background: color-mix(in srgb,var(--panel) 88%,transparent); box-shadow: 0 12px 40px rgba(0,0,0,.28); backdrop-filter: blur(18px); }
+    .dock-link { min-height: 49px; display: grid; place-items: center; align-content: center; gap: 3px; border-radius: 13px; color: var(--soft); font-size: 7px; font-weight: 800; cursor: pointer; border: none; background: transparent; }
+    .dock-link svg { width: 17px; height: 17px; }
+    .dock-link.is-active, .dock-link:hover { color: var(--cyan); background: rgba(64,224,220,.075); }
+
+    @media (max-width: 1060px) { .products-grid { grid-template-columns: repeat(3,minmax(0,1fr)); } .category-row { grid-template-columns: repeat(3,minmax(0,1fr)); } }
     @media (max-width: 760px) {
-      .products-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      body { padding-bottom: calc(76px + env(safe-area-inset-bottom)); }
+      .shell { width: calc(100% - 28px); }
+      .header-row { min-height: 64px; gap: 9px; }
+      .main-nav, .header-search { display: none; }
+      .icon-button[data-open-search] { display: grid; }
+      .hero { padding: 35px 0 25px; }
+      .hero-grid { grid-template-columns: 1fr; gap: 2px; text-align: center; }
+      .hero-copy-wrap { text-align: center; }
+      .eyebrow { margin-inline: auto; }
+      .hero-actions { justify-content: center; }
       .category-row { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      .products-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      .mobile-dock { display: grid; }
     }
   </style>
 </head>
 <body class="pb-24 md:pb-0">
 
+  <!-- الهيدر -->
   <header class="site-header">
     <div class="shell header-row">
       <a class="brand" href="#home">
@@ -138,13 +181,17 @@
     </div>
   </header>
 
+  <!-- المحتوى الرئيسي -->
   <main id="main">
     <section class="hero" id="home">
       <div class="shell hero-grid">
         <div class="hero-copy-wrap">
+          <div class="eyebrow"><span class="eyebrow-mark"></span> عالم الخدمات الرقمية من MARO</div>
           <h1>متجرك الرقمي<br><span class="gradient-text">بأسلوب أذكى.</span></h1>
           <p class="hero-copy">ألعاب، اشتراكات، بطاقات وخدمات رقمية في مكان واحد. اختر المنتج، أضفه إلى السلة، وأرسل تفاصيل طلبك لتأكيدها مع فريق MARO.</p>
-          <div class="hero-actions"><a class="button button-primary" href="#products">تصفح المنتجات</a></div>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#products">تصفح المنتجات <svg viewBox="0 0 24 24" fill="none" style="width:16px;height:16px;"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          </div>
         </div>
       </div>
     </section>
@@ -158,9 +205,9 @@
 
     <section class="section" id="products">
       <div class="shell">
-        <div class="section-head"><div><h2>منتجات وخدمات مختارة</h2></div><span data-result-count></span></div>
+        <div class="section-head"><div><h2>منتجات وخدمات مختارة</h2></div><span data-result-count style="color:var(--muted); font-size:12px;"></span></div>
         <div class="products-grid" data-products-grid>
-            <div class="no-results" id="loading-text">جاري تحميل المنتجات من قاعدة البيانات...</div>
+            <div style="text-align:center; padding: 40px; color: var(--muted);" id="loading-text">جاري تحميل المنتجات...</div>
         </div>
       </div>
     </section>
@@ -169,25 +216,40 @@
   <!-- سلة المشتريات -->
   <div class="drawer-backdrop" data-cart-backdrop>
     <aside class="cart-drawer">
-      <div class="drawer-head"><div><h2>سلة MARO</h2></div><button class="icon-button" type="button" data-close-cart><svg viewBox="0 0 24 24" fill="none"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button></div>
+      <div class="drawer-head">
+        <div><h2>سلة MARO</h2></div>
+        <button class="icon-button" type="button" data-close-cart><svg viewBox="0 0 24 24" fill="none"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+      </div>
       <div class="drawer-items" data-cart-items></div>
       <div class="drawer-foot" style="padding: 18px; border-top: 1px solid var(--line);">
-        <div class="total-row" style="display: flex; justify-content: space-between; margin-bottom: 11px;"><span>المجموع التقديري</span><strong data-cart-total>$0</strong></div>
-        <button class="button button-primary" type="button" data-checkout style="width: 100%;">أرسل الطلب إلى تيليجرام</button>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 11px;"><span>المجموع التقديري</span><strong data-cart-total style="color:var(--cyan); font-size:18px;">$0</strong></div>
+        <button class="button button-primary" type="button" data-checkout style="width: 100%; min-height: 48px;">أرسل الطلب إلى تيليجرام</button>
       </div>
     </aside>
   </div>
 
-  <!-- نافذة حساب العميل -->
-  <div class="modal-backdrop" data-account-backdrop>
-    <section class="modal-card" style="text-align: center;">
-      <button class="icon-button" type="button" data-close-account style="position: absolute; top: 16px; left: 16px;"><svg viewBox="0 0 24 24" fill="none"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
-      <h2 style="margin-top: 20px; margin-bottom: 20px;">حساب العميل</h2>
-      <div id="account-modal-content"></div>
-    </section>
-  </div>
+  <!-- شريط التنقل السفلي للموبايل -->
+  <nav class="mobile-dock">
+    <a href="#home" class="dock-link is-active">
+      <svg viewBox="0 0 24 24" fill="none"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1V10Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+      <span>الرئيسية</span>
+    </a>
+    <a href="#categories" class="dock-link">
+      <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.7"/><rect x="14" y="4" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.7"/><rect x="4" y="14" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.7"/><rect x="14" y="14" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.7"/></svg>
+      <span>الأقسام</span>
+    </a>
+    <button class="dock-link" type="button" data-open-cart>
+      <svg viewBox="0 0 24 24" fill="none"><path d="M4 5h2l2.1 10.1a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 1.9-1.4L21 9H7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="20" r="1.2" fill="currentColor"/><circle cx="18" cy="20" r="1.2" fill="currentColor"/></svg>
+      <span class="cart-count" data-cart-count style="top:2px; right: calc(50% - 18px); left: auto;">0</span>
+      <span>السلة</span>
+    </button>
+    <button class="dock-link" type="button" onclick="window.loginWithGoogle()">
+      <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.5" stroke="currentColor" stroke-width="1.8"/><path d="M5 20c.7-3.2 3.1-5 7-5s6.3 1.8 7 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <span>حسابي</span>
+    </button>
+  </nav>
 
-  <!-- 🌟 نافذة استكمال الملف الشخصي (الجديدة) 🌟 -->
+  <!-- مودال استكمال الملف الشخصي (الجديد) -->
   <div class="modal-backdrop" data-profile-backdrop>
     <section class="modal-card" style="border-color: var(--cyan);">
       <div style="text-align: center; margin-bottom: 20px;">
@@ -213,7 +275,16 @@
     </section>
   </div>
 
-  <div class="toast" data-toast style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--green); color: #000; padding: 10px 20px; border-radius: 10px; font-weight: bold; display: none; z-index: 999;"></div>
+  <!-- مودال معلومات الحساب القديم -->
+  <div class="modal-backdrop" data-account-backdrop>
+    <section class="modal-card" style="text-align: center; position: relative;">
+      <button class="icon-button" type="button" data-close-account style="position: absolute; top: 16px; left: 16px;"><svg viewBox="0 0 24 24" fill="none"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+      <h2 style="margin-top: 20px; margin-bottom: 20px;">حساب العميل</h2>
+      <div id="account-modal-content"></div>
+    </section>
+  </div>
+
+  <div class="toast" data-toast style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--cyan); color: #000; padding: 10px 20px; border-radius: 10px; font-weight: bold; display: none; z-index: 999;"></div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -252,7 +323,6 @@
       {id:"support", label:"خدمات متنوعة", icon:"shield"}
     ];
 
-    // --- دالة عرض الرسائل ---
     function showToast(msg) {
         const t = document.querySelector('[data-toast]');
         t.textContent = msg;
@@ -272,7 +342,6 @@
         });
     };
 
-    // حفظ الملف الشخصي في الداتابيز
     window.saveProfile = async () => {
         const country = document.getElementById('profile-country').value;
         const phone = document.getElementById('profile-phone').value;
@@ -287,42 +356,34 @@
         if (user) {
             try {
                 await setDoc(doc(db, "users", user.uid), {
-                    email: user.email,
-                    name: user.displayName,
-                    photoURL: user.photoURL,
-                    countryCode: country,
-                    phone: phone,
-                    address: address,
-                    createdAt: Date.now()
+                    email: user.email, name: user.displayName, photoURL: user.photoURL,
+                    countryCode: country, phone: phone, address: address, createdAt: Date.now()
                 });
-                
                 document.querySelector("[data-profile-backdrop]").classList.remove("is-open");
                 showToast("تم حفظ الملف الشخصي بنجاح!");
-                updateAuthUI(user, true); // true يعني الملف مكتمل
+                updateAuthUI(user);
             } catch (e) {
                 alert("حدث خطأ أثناء الحفظ: " + e.message);
             }
         }
     };
 
-    // تحديث واجهة المستخدم بناءً على حالة الدخول
     async function updateAuthUI(user) {
         const menuLoginBtn = document.getElementById('menu-login-btn');
         const accountContent = document.getElementById('account-modal-content');
 
         if (user) {
-            // التحقق هل المستخدم أكمل ملفه الشخصي أم لا
             const userDocRef = doc(db, "users", user.uid);
             const userDoc = await getDoc(userDocRef);
             
             if (!userDoc.exists()) {
-                // المستخدم جديد -> نفتح شاشة استكمال الملف
+                // مستخدم جديد -> شاشة استكمال الملف
                 document.querySelector("[data-profile-backdrop]").classList.add("is-open");
                 if (menuLoginBtn) menuLoginBtn.innerText = "استكمال الملف";
                 return;
             }
 
-            // المستخدم مسجل وملفه مكتمل
+            // مستخدم مسجل وملفه مكتمل
             if (menuLoginBtn) {
                 menuLoginBtn.innerText = `حسابي (${user.displayName ? user.displayName.split(' ')[0] : 'مستخدم'})`;
                 menuLoginBtn.onclick = (e) => {
@@ -341,7 +402,6 @@
                 <button onclick="window.logoutUser()" class="button button-primary" style="width: 100%; background: var(--danger); color: white;">تسجيل الخروج</button>
             `;
         } else {
-            // غير مسجل
             if (menuLoginBtn) {
                 menuLoginBtn.innerText = "تسجيل الدخول";
                 menuLoginBtn.onclick = (e) => {
@@ -355,7 +415,6 @@
         }
     }
 
-    // التحقق من حالة الدخول عند تحميل الصفحة
     getRedirectResult(auth).then((result) => {
         if (result?.user) showToast("تم تسجيل الدخول بنجاح!");
     }).catch((err) => console.error("Redirect Error:", err));
@@ -365,7 +424,7 @@
     });
 
 
-    // --- جلب المنتجات ---
+    // --- المنتجات ---
     async function loadProducts() {
         try {
             const querySnapshot = await getDocs(collection(db, "products"));
@@ -373,44 +432,64 @@
             querySnapshot.forEach((doc) => {
                 const data = doc.data();
                 products.push({
-                    id: doc.id,
-                    name: data.name || "منتج",
+                    id: doc.id, name: data.name || "منتج",
                     category: data.categoryId || "support",
                     categoryLabel: categoryData.find(c => c.id === data.categoryId)?.label || "منتجات",
-                    price: Number(data.price) || 0,
-                    priceMode: data.priceMode || "fixed",
-                    description: data.description || "",
-                    image: data.image || "",
-                    tag: data.tag || "رقمي"
+                    price: Number(data.price) || 0, priceMode: data.priceMode || "fixed",
+                    description: data.description || "", image: data.image || "", tag: data.tag || "رقمي"
                 });
             });
+            renderCategories();
             renderProducts();
-        } catch (e) {
-            console.error(e);
-        }
+        } catch (e) { console.error(e); }
     }
 
-    // --- رسم المنتجات (نفس الكود السابق) ---
     const $ = (sel) => document.querySelector(sel);
     const $$ = (sel) => [...document.querySelectorAll(sel)];
 
+    function renderCategories() {
+        const tiles = $("[data-category-tiles]");
+        tiles.innerHTML = categoryData.filter(c => c.id !== "all").map(c => `
+            <button class="category-tile" onclick="window.filterCategory('${c.id}')">
+                <span class="category-icon"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.7"/><rect x="14" y="4" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.7"/><rect x="4" y="14" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.7"/><rect x="14" y="14" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.7"/></svg></span>
+                <span><strong>${c.label}</strong></span>
+            </button>
+        `).join("");
+    }
+
+    let currentFilter = "all";
+    window.filterCategory = (id) => {
+        currentFilter = id;
+        renderProducts();
+    };
+
     function renderProducts() {
         const grid = $("[data-products-grid]");
-        if (products.length === 0) {
-            grid.innerHTML = '<div class="no-results" style="text-align:center; padding:20px;">لا توجد منتجات حالياً.</div>';
+        let filtered = products;
+        if (currentFilter !== "all") {
+            filtered = products.filter(p => p.category === currentFilter);
+        }
+        
+        if (filtered.length === 0) {
+            grid.innerHTML = '<div style="text-align:center; padding:20px; color:var(--muted); width:100%; grid-column: 1/-1;">لا توجد منتجات في هذا القسم.</div>';
+            $("[data-result-count]").textContent = "0 منتج";
             return;
         }
-        grid.innerHTML = products.map(p => `
+
+        $("[data-result-count]").textContent = `${filtered.length} منتج`;
+
+        grid.innerHTML = filtered.map(p => `
             <article class="product-card">
-                <div class="product-art" style="background: url('${p.image || 'https://images.unsplash.com/photo-1614680376573-df3480f0c6ff?auto=format&fit=crop&q=80&w=300'}') center/cover;">
+                <div class="product-art" style="background: ${p.image ? `url('${p.image}') center/cover` : 'linear-gradient(145deg,#122c44,#171635)'};">
+                    ${p.image ? '' : `<span class="product-illustration"><svg viewBox="0 0 24 24" fill="none"><path d="m12 3 1.6 6.4L20 11l-6.4 1.6L12 19l-1.6-6.4L4 11l6.4-1.6L12 3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></span>`}
                     <span class="art-label" style="position:absolute; bottom:10px; left:10px; background:rgba(0,0,0,0.6); padding:2px 8px; border-radius:4px;">${p.tag}</span>
                 </div>
                 <div class="product-body">
                     <span style="font-size:10px; color:var(--muted);">${p.categoryLabel}</span>
                     <h3 class="product-title">${p.name}</h3>
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
+                    <div class="product-footer">
                         <span class="price">${p.priceMode === 'from' ? 'من ' : ''}$${p.price}</span>
-                        <button class="add-button" onclick="addToCart('${p.id}', '${p.name.replace(/'/g, "\\'")}', ${p.price})">أضف للسلة</button>
+                        <button class="add-button" onclick="window.addToCart('${p.id}', '${p.name.replace(/'/g, "\\'")}', ${p.price})">أضف للسلة</button>
                     </div>
                 </div>
             </article>
@@ -451,18 +530,10 @@
         const t = e.target.closest("button,a");
         if (!t) return;
         
-        if (t.matches("[data-menu-toggle]")) {
-            $("[data-menu-panel]").classList.toggle("is-open");
-        }
-        if (t.matches("[data-open-cart]")) {
-            $("[data-cart-backdrop]").classList.add("is-open");
-        }
-        if (t.matches("[data-close-cart]")) {
-            $("[data-cart-backdrop]").classList.remove("is-open");
-        }
-        if (t.matches("[data-close-account]")) {
-            $("[data-account-backdrop]").classList.remove("is-open");
-        }
+        if (t.matches("[data-menu-toggle]")) $("[data-menu-panel]").classList.toggle("is-open");
+        if (t.matches("[data-open-cart]")) $("[data-cart-backdrop]").classList.add("is-open");
+        if (t.matches("[data-close-cart]")) $("[data-cart-backdrop]").classList.remove("is-open");
+        if (t.matches("[data-close-account]")) $("[data-account-backdrop]").classList.remove("is-open");
         if (t.matches("[data-checkout]")) {
             if(!cart.length) return showToast("السلة فارغة!");
             let msg = "مرحباً، أريد طلب:\n";
