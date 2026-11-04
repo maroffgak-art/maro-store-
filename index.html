@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#080c15">
   <meta name="description" content="Maro — متجر رقمي عربي لمنتجات الألعاب والاشتراكات والخدمات الرقمية.">
   
-  <!-- تم تعديل الـ CSP عشان يسمح بـ Firebase -->
+  <!-- تم تعديل الـ CSP عشان يسمح بـ Firebase Auth -->
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://cdnjs.cloudflare.com; connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com; upgrade-insecure-requests">
   
   <title>MARO — سوقك الرقمي</title>
@@ -14,51 +14,21 @@
   <style>
     :root {
       color-scheme: dark;
-      --bg: #080c15;
-      --bg-soft: #0c1220;
-      --panel: #101a2b;
-      --panel-2: #142137;
-      --panel-3: #192945;
-      --text: #f5f8ff;
-      --muted: #a0aec4;
-      --soft: #75859f;
-      --line: rgba(210, 228, 255, .11);
-      --line-strong: rgba(210, 228, 255, .19);
-      --cyan: #40e0dc;
-      --blue: #548bff;
-      --violet: #a58aff;
-      --pink: #f28bc8;
-      --green: #8ce0ad;
-      --warning: #ffd27a;
-      --danger: #ff8195;
-      --shadow: 0 22px 64px rgba(0,0,0,.35);
-      --radius: 22px;
-      --shell: 1200px;
+      --bg: #080c15; --bg-soft: #0c1220; --panel: #101a2b; --panel-2: #142137; --panel-3: #192945;
+      --text: #f5f8ff; --muted: #a0aec4; --soft: #75859f; --line: rgba(210, 228, 255, .11); --line-strong: rgba(210, 228, 255, .19);
+      --cyan: #40e0dc; --blue: #548bff; --violet: #a58aff; --pink: #f28bc8; --green: #8ce0ad; --warning: #ffd27a; --danger: #ff8195;
+      --shadow: 0 22px 64px rgba(0,0,0,.35); --shell: 1200px;
     }
     html[data-theme="light"] {
       color-scheme: light;
-      --bg: #f1f5fb;
-      --bg-soft: #eaf0f8;
-      --panel: #ffffff;
-      --panel-2: #f8faff;
-      --panel-3: #eef3fb;
-      --text: #122039;
-      --muted: #566781;
-      --soft: #71819a;
-      --line: rgba(20, 42, 76, .1);
-      --line-strong: rgba(20, 42, 76, .18);
-      --cyan: #079f9b;
-      --blue: #396fe0;
-      --violet: #7557d9;
-      --pink: #d64c9e;
-      --green: #258858;
-      --warning: #a56b00;
-      --danger: #bd3850;
+      --bg: #f1f5fb; --bg-soft: #eaf0f8; --panel: #ffffff; --panel-2: #f8faff; --panel-3: #eef3fb;
+      --text: #122039; --muted: #566781; --soft: #71819a; --line: rgba(20, 42, 76, .1); --line-strong: rgba(20, 42, 76, .18);
+      --cyan: #079f9b; --blue: #396fe0; --violet: #7557d9; --pink: #d64c9e; --green: #258858; --warning: #a56b00; --danger: #bd3850;
       --shadow: 0 22px 64px rgba(31,57,92,.13);
     }
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; scroll-padding-top: 96px; }
-    body { margin: 0; min-width: 320px; padding-bottom: 0; background: var(--bg); color: var(--text); font-family: 'Cairo', system-ui, -apple-system, sans-serif; line-height: 1.6; transition: background .25s ease, color .25s ease; }
+    body { margin: 0; min-width: 320px; background: var(--bg); color: var(--text); font-family: 'Cairo', sans-serif; line-height: 1.6; transition: background .25s ease, color .25s ease; }
     body.locked { overflow: hidden; }
     button, input, select { font: inherit; }
     button { color: inherit; }
@@ -101,6 +71,12 @@
     .menu-panel { display: none; position: absolute; inset-inline: 20px; inset-block-start: calc(100% + 8px); padding: 14px; border: 1px solid var(--line-strong); border-radius: 18px; background: var(--panel); box-shadow: var(--shadow); }
     .menu-panel.is-open { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
     .menu-panel a { padding: 10px; border-radius: 11px; color: var(--muted); background: var(--panel-2); font-size: 12px; }
+    
+    /* User Profile Button */
+    .user-avatar { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; border: 1px solid var(--cyan); }
+    .btn-google { background: #fff; color: #333; border: 1px solid #ddd; font-weight: 700; }
+    .btn-google:hover { background: #f1f1f1; border-color: #ccc; }
+
     .hero { position: relative; padding: 58px 0 34px; overflow: clip; }
     .hero::before { content: ""; position: absolute; z-index: -1; width: 720px; height: 500px; inset-block-start: -150px; inset-inline-start: -230px; border-radius: 50%; background: radial-gradient(ellipse,rgba(43,190,200,.15),rgba(84,139,255,.05) 45%,transparent 72%); filter: blur(12px); }
     .hero-grid { display: grid; grid-template-columns: 1.05fr .95fr; align-items: center; gap: clamp(24px,5vw,68px); }
@@ -262,13 +238,7 @@
     .toast.is-visible { opacity: 1; transform: translateY(0); }
     .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
     :focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
-    @media (max-width: 1060px) {
-      .header-row { gap: 14px; }
-      .brand { min-width: 124px; }
-      .main-nav { gap: 14px; }
-      .products-grid { grid-template-columns: repeat(3,minmax(0,1fr)); }
-      .category-row { grid-template-columns: repeat(3,minmax(0,1fr)); }
-    }
+    @media (max-width: 1060px) { .header-row { gap: 14px; } .brand { min-width: 124px; } .main-nav { gap: 14px; } .products-grid { grid-template-columns: repeat(3,minmax(0,1fr)); } .category-row { grid-template-columns: repeat(3,minmax(0,1fr)); } }
     @media (max-width: 760px) {
       html { scroll-padding-top: 80px; }
       body { padding-bottom: calc(76px + env(safe-area-inset-bottom)); }
@@ -351,20 +321,8 @@
       .dock-link .cart-count { width: 16px; min-width: 16px; height: 16px; inset-block-start: 2px; inset-inline-start: calc(50% - 18px); border-color: var(--panel); font-size: 8px; }
       .toast { inset-block-end: calc(86px + env(safe-area-inset-bottom)); }
     }
-    @media (max-width: 370px) {
-      .shell { width: calc(100% - 22px); }
-      .brand-sub { display: none; }
-      .hero-stage { min-height: 245px; }
-      .float-card { padding: 7px; }
-      .float-card small { display: none; }
-      .products-grid { gap: 7px; }
-      .product-art { height: 104px; }
-      .product-body { padding: 8px; }
-      .add-button { padding-inline: 5px; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
-    }
+    @media (max-width: 370px) { .shell { width: calc(100% - 22px); } .brand-sub { display: none; } .hero-stage { min-height: 245px; } .float-card { padding: 7px; } .float-card small { display: none; } .products-grid { gap: 7px; } .product-art { height: 104px; } .product-body { padding: 8px; } .add-button { padding-inline: 5px; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; } }
   </style>
 </head>
 <body>
@@ -387,8 +345,18 @@
       <div class="header-tools">
         <label class="search-box header-search" aria-label="ابحث عن منتج"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.6" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 4.2 4.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><input type="search" data-search-input placeholder="ابحث عن منتج..." autocomplete="off"></label>
         <button class="icon-button" type="button" data-open-search aria-label="فتح البحث"><svg viewBox="0 0 24 24" fill="none"><circle cx="10.8" cy="10.8" r="6.6" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 4.2 4.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+        
+        <!-- زرار تسجيل الدخول -->
+        <button class="icon-button btn-google" id="google-login-btn" type="button" aria-label="تسجيل الدخول بجوجل" title="تسجيل الدخول">
+            <svg viewBox="0 0 24 24" fill="none" style="width:20px;height:20px;">
+                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+            </svg>
+        </button>
+
         <button class="icon-button" type="button" data-theme-toggle aria-label="تبديل المظهر" title="تبديل المظهر"><svg data-theme-icon viewBox="0 0 24 24" fill="none"><path d="M20 15.2A8.5 8.5 0 0 1 8.8 4 8.5 8.5 0 1 0 20 15.2Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></button>
-        <button class="icon-button header-account" type="button" data-open-account aria-label="معلومات الحساب" title="حسابي"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.5" stroke="currentColor" stroke-width="1.8"/><path d="M5 20c.7-3.2 3.1-5 7-5s6.3 1.8 7 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
         <button class="icon-button" type="button" data-open-cart aria-label="فتح السلة"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5h2l2.1 10.1a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 1.9-1.4L21 9H7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="20" r="1.2" fill="currentColor"/><circle cx="18" cy="20" r="1.2" fill="currentColor"/></svg><span class="cart-count" data-cart-count>0</span></button>
         <button class="icon-button" type="button" data-menu-toggle aria-label="فتح القائمة"><svg viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
       </div>
@@ -482,12 +450,13 @@
   </div>
 
   <div class="modal-backdrop" data-product-backdrop aria-hidden="true"><section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="productModalTitle"><div class="modal-head"><h2>تفاصيل المنتج</h2><button class="icon-button" type="button" data-close-product aria-label="إغلاق"><svg viewBox="0 0 24 24" fill="none"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button></div><div class="modal-content" data-product-detail></div></section></div>
-  <div class="modal-backdrop" data-account-backdrop aria-hidden="true"><section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="accountModalTitle"><div class="modal-head"><h2 id="accountModalTitle">حساب العميل</h2><button class="icon-button" type="button" data-close-account aria-label="إغلاق"><svg viewBox="0 0 24 24" fill="none"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button></div><div class="modal-content"><p class="account-note">تسجيل الدخول بحساب Google أو إنشاء حساب عميل يحتاج قاعدة بيانات وربط OAuth آمنًا. هذه نسخة HTML مستقلة ولا تحفظ حسابات أو كلمات مرور؛ لا تدخل بياناتك هنا.</p><a class="button button-primary" href="https://t.me/qijub" target="_blank" rel="noopener noreferrer">تابع الطلب عبر تيليجرام</a></div></section></div>
+  <div class="modal-backdrop" data-account-backdrop aria-hidden="true"><section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="accountModalTitle"><div class="modal-head"><h2 id="accountModalTitle">حساب العميل</h2><button class="icon-button" type="button" data-close-account aria-label="إغلاق"><svg viewBox="0 0 24 24" fill="none"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button></div><div class="modal-content" id="account-modal-content"><p class="account-note">جاري التحقق من حالة تسجيل الدخول...</p></div></section></div>
   <div class="toast" role="status" aria-live="polite" data-toast></div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     // ⚠️ ضع كود Firebase الخاص بك هنا
     const firebaseConfig = {
@@ -501,6 +470,8 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
 
     const TELEGRAM_USERNAME = "qijub"; 
     
@@ -524,7 +495,6 @@
             products = [];
             querySnapshot.forEach((doc) => {
                 const data = doc.data();
-                // تحويل البيانات من Firebase لتناسب التصميم
                 products.push({
                     id: doc.id,
                     name: data.name || "منتج بدون اسم",
@@ -545,7 +515,65 @@
         }
     }
 
+    // --- إعدادات تسجيل الدخول ---
+    getRedirectResult(auth).then((result) => {
+        if (result?.user) {
+            showToast("تم تسجيل الدخول بنجاح!");
+        }
+    }).catch((error) => {
+        console.error("Auth Error:", error);
+        showToast("حدث خطأ أثناء تسجيل الدخول.");
+    });
+
+    window.loginWithGoogle = () => {
+        signInWithRedirect(auth, provider);
+    };
+
+    window.logout = () => {
+        signOut(auth).then(() => {
+            showToast("تم تسجيل الخروج.");
+            document.getElementById('account-modal-content').innerHTML = `<p class="account-note">تم تسجيل الخروج بنجاح.</p>`;
+        });
+    };
+
+    onAuthStateChanged(auth, (user) => {
+        const loginBtn = document.getElementById('google-login-btn');
+        const accountContent = document.getElementById('account-modal-content');
+
+        if (user) {
+            // المستخدم مسجل دخول
+            loginBtn.innerHTML = `<img src="${user.photoURL}" class="user-avatar" alt="Profile">`;
+            loginBtn.onclick = () => openModal("[data-account-backdrop]");
+            loginBtn.classList.remove('btn-google');
+            
+            accountContent.innerHTML = `
+                <div class="flex flex-col items-center gap-3 mb-4">
+                    <img src="${user.photoURL}" class="w-16 h-16 rounded-full border-2 border-[var(--cyan)]">
+                    <h3 class="font-bold text-lg">${user.displayName}</h3>
+                    <p class="text-sm text-[var(--muted)]">${user.email}</p>
+                </div>
+                <button onclick="logout()" class="button button-primary w-full bg-red-500 hover:bg-red-600 text-white border-none">تسجيل الخروج</button>
+            `;
+        } else {
+            // المستخدم غير مسجل
+            loginBtn.innerHTML = `
+                <svg viewBox="0 0 24 24" fill="none" style="width:20px;height:20px;">
+                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                </svg>
+            `;
+            loginBtn.onclick = window.loginWithGoogle;
+            loginBtn.classList.add('btn-google');
+
+            accountContent.innerHTML = `<p class="account-note">يمكنك الآن تسجيل الدخول باستخدام حساب Google الخاص بك لتجربة تسوق أسرع.</p>
+            <button onclick="window.loginWithGoogle()" class="button button-primary w-full">تسجيل الدخول بجوجل</button>`;
+        }
+    });
+
     const svgIcons = {
+      // ... (نفس الأيقونات اللي في الكود السابق)
       game:'<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 8h12a3.2 3.2 0 0 1 3 4.1l-1 3a2.2 2.2 0 0 1-3.8.9L14 14h-4l-2.2 2a2.2 2.2 0 0 1-3.8-.9l-1-3A3.2 3.2 0 0 1 6 8Z" stroke="currentColor" stroke-width="1.7"/><path d="M7 10v4m-2-2h4m6-1h.01M18 13h.01" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>',
       play:'<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="5" width="17" height="14" rx="3" stroke="currentColor" stroke-width="1.7"/><path d="m10 9 5 3-5 3V9Z" fill="currentColor"/></svg>',
       flame:'<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M13.2 3c.5 3.3-2.7 4.3-1.3 7.2.8-1 1.8-1.7 2.8-2.1 2.9 2.5 4 5 3.1 8A6.1 6.1 0 0 1 11.9 21a6.3 6.3 0 0 1-6.1-6.4c0-3.1 2-5.8 4.7-8 .2 2.3.8 3.3 1.7 3.8C11.4 7.8 14 6 13.2 3Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>',
@@ -560,6 +588,8 @@
       spark:'<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m12 3 1.6 6.4L20 11l-6.4 1.6L12 19l-1.6-6.4L4 11l6.4-1.6L12 3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="m19 16 .8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8L19 16Z" fill="currentColor"/></svg>',
       grid:'<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.7"/><rect x="14" y="4" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.7"/><rect x="4" y="14" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.7"/><rect x="14" y="14" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.7"/></svg>'
     };
+
+    // ... (باقي كود السلة والمنتجات زي ما هو)
     const storageKey = "maro-cart-v3";
     const themeKey = "maro-theme-v3";
     const $ = (sel, root=document) => root.querySelector(sel);
@@ -678,12 +708,10 @@
       $("[data-theme-icon]").innerHTML = theme==="dark"?'<path d="M20 15.2A8.5 8.5 0 0 1 8.8 4 8.5 8.5 0 1 0 20 15.2Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>':'<circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>';
     }
 
-    // تشغيل الدوال الأساسية
     try { const savedTheme=localStorage.getItem(themeKey); if(savedTheme==="light"||savedTheme==="dark") document.documentElement.dataset.theme=savedTheme; } catch {}
     $("[data-year]").textContent = new Date().getFullYear();
     applyTheme(document.documentElement.dataset.theme||"dark");
     
-    // جلب المنتجات عند فتح الصفحة
     loadProducts().then(() => {
         renderCart();
     });
@@ -702,7 +730,6 @@
       if(target.matches("[data-view-product]")){showProduct(target.dataset.viewProduct);return;}
       if(target.matches("[data-open-cart]")){openCart();return;}
       if(target.matches("[data-close-cart]")){closeCart();return;}
-      if(target.matches("[data-cart-backdrop]")){closeCart();return;}
       if(target.matches("[data-qty]")){const id=target.dataset.id, row=cart.find(item=>String(item.id)===String(id));if(row){row.qty=target.dataset.qty==="plus"?Math.min(99,row.qty+1):row.qty-1;if(row.qty<1)cart=cart.filter(item=>String(item.id)!==String(id));renderCart();}return;}
       if(target.matches("[data-remove]")){cart=cart.filter(item=>String(item.id)!==String(target.dataset.remove));renderCart();return;}
       if(target.matches("[data-checkout]")){sendTelegramOrder();return;}
