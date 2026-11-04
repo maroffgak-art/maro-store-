@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maro | المتجر الرقمي الاحترافي</title>
+    <title>Madara Store | متجرك الرقمي الاحترافي</title>
     
-    <!-- سياسة الأمان -->
+    <!-- سياسة الأمان CSP (تسمح بالأيقونات والخطوط والصور) -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://images.unsplash.com https://cdn-icons-png.flaticon.com; connect-src 'self' https://api.telegram.org;">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,13 +16,12 @@
     
     <style>
         :root {
-            --primary: #2563eb; /* أزرق احترافي */
+            --primary: #2563eb;
             --bg-color: #f8fafc;
             --text-color: #1e293b;
             --card-bg: #ffffff;
         }
 
-        /* وضع الليل (Dark Mode) */
         .dark-mode {
             --bg-color: #0f172a;
             --text-color: #f8fafc;
@@ -36,7 +35,6 @@
             transition: background-color 0.3s, color 0.3s;
             overflow-x: hidden;
             
-            /* حماية النسخ */
             -webkit-user-select: none; 
             -webkit-touch-callout: none; 
             -moz-user-select: none;
@@ -44,16 +42,27 @@
             user-select: none;
         }
 
-        /* تنسيق كروت الفئات */
         .category-card {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden;
+            position: relative;
         }
         .category-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.15);
+        }
+        .category-card:hover .card-bg-image {
+            transform: scale(1.05);
         }
 
-        /* الشريط السفلي للموبايل */
+        .card-bg-image {
+            transition: transform 0.5s ease;
+        }
+
+        .card-overlay {
+            background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+        }
+
         .bottom-nav {
             box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
         }
@@ -62,35 +71,42 @@
             border-top: 1px solid rgba(255,255,255,0.05);
         }
 
-        /* صورة خلفية الكارت */
-        .card-image-bg {
-            background-size: cover;
-            background-position: center;
-            height: 140px;
-            position: relative;
+        .btn-neon {
+            background: var(--primary);
+            color: white;
+            transition: all 0.3s ease;
         }
-        .card-image-bg::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+        .btn-neon:hover {
+            background: #1d4ed8;
+            box-shadow: 0 0 20px rgba(37, 99, 235, 0.4);
+        }
+
+        /* تنسيقات الـ Modal */
+        #channel-modal {
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            animation: modalPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes modalPop {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
         }
     </style>
 </head>
 <body class="pb-24 md:pb-0">
 
     <!-- الهيدر -->
-    <header class="sticky top-0 z-50 bg-[var(--card-bg)] shadow-sm transition-colors duration-300">
+    <header class="sticky top-0 z-40 bg-[var(--card-bg)] shadow-sm transition-colors duration-300">
         <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
-            <!-- اللوجو -->
             <div class="flex items-center gap-2">
                 <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center text-xl font-bold shadow-inner">
                     <i class="fa-solid fa-bolt"></i>
                 </div>
-                <span class="text-xl font-black tracking-wide">Maro Store</span>
+                <span class="text-xl font-black tracking-wide">Madara Store</span>
             </div>
             
-            <!-- الأزرار -->
             <div class="flex items-center gap-3">
                 <button onclick="toggleDarkMode()" class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-200 transition">
                     <i id="theme-icon" class="fa-solid fa-moon"></i>
@@ -106,101 +122,127 @@
     <!-- المحتوى الرئيسي -->
     <main class="max-w-6xl mx-auto px-4 mt-6">
         
-        <!-- البانر الإعلاني -->
-        <div class="relative w-full h-48 md:h-64 rounded-3xl overflow-hidden shadow-xl">
-            <!-- صورة البانر -->
+        <!-- البانر -->
+        <div class="relative w-full h-56 md:h-72 rounded-3xl overflow-hidden shadow-2xl">
             <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1200" alt="Digital Banner" class="absolute inset-0 w-full h-full object-cover">
-            <div class="absolute inset-0 bg-gradient-to-r from-[#0f172a]/90 to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-[#0f172a]/95 to-transparent"></div>
             
             <div class="relative z-10 h-full flex flex-col justify-center px-8 md:px-12">
-                <span class="text-blue-400 font-bold mb-2 tracking-wider text-sm">DIGITAL STORE</span>
-                <h1 class="text-3xl md:text-5xl font-black text-white mb-4 leading-tight">أفضل المنتجات الرقمية<br>في مكان واحد</h1>
-                <a href="#categories" class="bg-blue-600 hover:bg-blue-700 text-white w-fit px-6 py-2 rounded-full font-bold text-sm transition shadow-lg shadow-blue-500/30">تصفح الآن</a>
+                <span class="text-blue-400 font-bold mb-2 tracking-wider text-sm">PREMIUM DIGITAL STORE</span>
+                <h1 class="text-4xl md:text-6xl font-black text-white mb-4 leading-tight">أفضل المنتجات الرقمية<br>في مكان واحد</h1>
+                <a href="#categories" class="bg-blue-600 hover:bg-blue-700 text-white w-fit px-8 py-3 rounded-full font-bold text-sm transition shadow-lg shadow-blue-500/30">تصفح الآن</a>
             </div>
         </div>
 
         <!-- عنوان الأقسام -->
-        <div class="flex items-center justify-between mt-10 mb-6">
+        <div class="flex items-center justify-between mt-12 mb-8">
             <div class="flex items-center gap-3">
-                <div class="w-1.5 h-6 bg-blue-600 rounded-full"></div>
+                <div class="w-1.5 h-8 bg-blue-600 rounded-full"></div>
                 <h2 class="text-2xl font-black">كل الفئات</h2>
             </div>
-            <a href="#" class="text-sm font-bold text-blue-600 hover:underline">عرض الكل</a>
         </div>
 
         <!-- شبكة الفئات -->
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+        <div id="categories" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
             
-            <!-- كارت 1 -->
-            <div class="category-card bg-[var(--card-bg)] rounded-2xl overflow-hidden shadow-sm border border-gray-100 dark:border-gray-800 cursor-pointer" onclick="addToCart(1, 'تطبيقات الدردشة', 5)">
-                <div class="card-image-bg" style="background-image: url('https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&q=80&w=400');">
-                    <div class="absolute bottom-2 right-2 z-10 text-white font-black text-lg drop-shadow-md">تطبيقات الدردشة</div>
+            <div class="category-card bg-[var(--card-bg)] rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 cursor-pointer" onclick="addToCart(1, 'تطبيقات الدردشة', 5)">
+                <div class="relative h-40 overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&q=80&w=400" class="card-bg-image w-full h-full object-cover" alt="Chat">
+                    <div class="card-overlay absolute inset-0"></div>
+                    <div class="absolute bottom-3 right-3 z-10 text-white font-black text-lg drop-shadow-md">تطبيقات الدردشة</div>
                 </div>
                 <div class="p-4 text-center">
                     <span class="font-bold text-gray-800 dark:text-gray-200">واتساب، تليجرام</span>
                 </div>
             </div>
 
-            <!-- كارت 2 -->
-            <div class="category-card bg-[var(--card-bg)] rounded-2xl overflow-hidden shadow-sm border border-gray-100 dark:border-gray-800 cursor-pointer" onclick="addToCart(2, 'قسم الألعاب', 15)">
-                <div class="card-image-bg" style="background-image: url('https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=400');">
-                    <div class="absolute bottom-2 right-2 z-10 text-white font-black text-lg drop-shadow-md">قسم الألعاب</div>
+            <div class="category-card bg-[var(--card-bg)] rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 cursor-pointer" onclick="addToCart(2, 'قسم الألعاب', 15)">
+                <div class="relative h-40 overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=400" class="card-bg-image w-full h-full object-cover" alt="Games">
+                    <div class="card-overlay absolute inset-0"></div>
+                    <div class="absolute bottom-3 right-3 z-10 text-white font-black text-lg drop-shadow-md">قسم الألعاب</div>
                 </div>
                 <div class="p-4 text-center">
                     <span class="font-bold text-gray-800 dark:text-gray-200">ببجي، فري فاير</span>
                 </div>
             </div>
 
-            <!-- كارت 3 -->
-            <div class="category-card bg-[var(--card-bg)] rounded-2xl overflow-hidden shadow-sm border border-gray-100 dark:border-gray-800 cursor-pointer" onclick="addToCart(3, 'عروض عامة', 10)">
-                <div class="card-image-bg" style="background-image: url('https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&q=80&w=400');">
-                    <div class="absolute bottom-2 right-2 z-10 text-white font-black text-lg drop-shadow-md">عروض عامة</div>
+            <div class="category-card bg-[var(--card-bg)] rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 cursor-pointer" onclick="addToCart(3, 'عروض عامة', 10)">
+                <div class="relative h-40 overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&q=80&w=400" class="card-bg-image w-full h-full object-cover" alt="Offers">
+                    <div class="card-overlay absolute inset-0"></div>
+                    <div class="absolute bottom-3 right-3 z-10 text-white font-black text-lg drop-shadow-md">عروض عامة</div>
                 </div>
                 <div class="p-4 text-center">
                     <span class="font-bold text-gray-800 dark:text-gray-200">🔥 خصومات حصرية</span>
                 </div>
             </div>
 
-            <!-- كارت 4 -->
-            <div class="category-card bg-[var(--card-bg)] rounded-2xl overflow-hidden shadow-sm border border-gray-100 dark:border-gray-800 cursor-pointer" onclick="addToCart(4, 'الحوالات المالية', 20)">
-                <div class="card-image-bg" style="background-image: url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&q=80&w=400');">
-                    <div class="absolute bottom-2 right-2 z-10 text-white font-black text-lg drop-shadow-md">الحوالات المالية</div>
+            <div class="category-card bg-[var(--card-bg)] rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 cursor-pointer" onclick="addToCart(4, 'الحوالات المالية', 20)">
+                <div class="relative h-40 overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&q=80&w=400" class="card-bg-image w-full h-full object-cover" alt="Finance">
+                    <div class="card-overlay absolute inset-0"></div>
+                    <div class="absolute bottom-3 right-3 z-10 text-white font-black text-lg drop-shadow-md">الحوالات المالية</div>
                 </div>
                 <div class="p-4 text-center">
                     <span class="font-bold text-gray-800 dark:text-gray-200">فيزا، شام كاش</span>
                 </div>
             </div>
 
-            <!-- كارت 5 -->
-            <div class="category-card bg-[var(--card-bg)] rounded-2xl overflow-hidden shadow-sm border border-gray-100 dark:border-gray-800 cursor-pointer" onclick="addToCart(5, 'الاشتراكات', 12)">
-                <div class="card-image-bg" style="background-image: url('https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?auto=format&fit=crop&q=80&w=400');">
-                    <div class="absolute bottom-2 right-2 z-10 text-white font-black text-lg drop-shadow-md">الاشتراكات</div>
+            <div class="category-card bg-[var(--card-bg)] rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 cursor-pointer" onclick="addToCart(5, 'الاشتراكات', 12)">
+                <div class="relative h-40 overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?auto=format&fit=crop&q=80&w=400" class="card-bg-image w-full h-full object-cover" alt="Subscriptions">
+                    <div class="card-overlay absolute inset-0"></div>
+                    <div class="absolute bottom-3 right-3 z-10 text-white font-black text-lg drop-shadow-md">الاشتراكات</div>
                 </div>
                 <div class="p-4 text-center">
                     <span class="font-bold text-gray-800 dark:text-gray-200">نتفليكس، شاهد</span>
                 </div>
             </div>
 
-            <!-- كارت 6 -->
-            <div class="category-card bg-[var(--card-bg)] rounded-2xl overflow-hidden shadow-sm border border-gray-100 dark:border-gray-800 cursor-pointer" onclick="addToCart(6, 'الدفع الإلكتروني', 8)">
-                <div class="card-image-bg" style="background-image: url('https://images.unsplash.com/photo-1621504450181-5d356f61d307?auto=format&fit=crop&q=80&w=400');">
-                    <div class="absolute bottom-2 right-2 z-10 text-white font-black text-lg drop-shadow-md">الدفع الإلكتروني</div>
+            <div class="category-card bg-[var(--card-bg)] rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 cursor-pointer" onclick="addToCart(6, 'الدفع الإلكتروني', 8)">
+                <div class="relative h-40 overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1621504450181-5d356f61d307?auto=format&fit=crop&q=80&w=400" class="card-bg-image w-full h-full object-cover" alt="E-Payment">
+                    <div class="card-overlay absolute inset-0"></div>
+                    <div class="absolute bottom-3 right-3 z-10 text-white font-black text-lg drop-shadow-md">الدفع الإلكتروني</div>
                 </div>
                 <div class="p-4 text-center">
                     <span class="font-bold text-gray-800 dark:text-gray-200">محافظ رقمية، كريبتو</span>
                 </div>
             </div>
 
+            <div class="category-card bg-[var(--card-bg)] rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 cursor-pointer" onclick="addToCart(7, 'خدمات متوعة', 25)">
+                <div class="relative h-40 overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1614680376573-df3480f0c6ff?auto=format&fit=crop&q=80&w=400" class="card-bg-image w-full h-full object-cover" alt="Misc">
+                    <div class="card-overlay absolute inset-0"></div>
+                    <div class="absolute bottom-3 right-3 z-10 text-white font-black text-lg drop-shadow-md">خدمات متوعة</div>
+                </div>
+                <div class="p-4 text-center">
+                    <span class="font-bold text-gray-800 dark:text-gray-200">آيتونز، جوجل بلاي</span>
+                </div>
+            </div>
+
+            <div class="category-card bg-[var(--card-bg)] rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 cursor-pointer" onclick="addToCart(8, 'دعم الصفحات', 30)">
+                <div class="relative h-40 overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1611926653458-09294b3142bf?auto=format&fit=crop&q=80&w=400" class="card-bg-image w-full h-full object-cover" alt="Page Support">
+                    <div class="card-overlay absolute inset-0"></div>
+                    <div class="absolute bottom-3 right-3 z-10 text-white font-black text-lg drop-shadow-md">دعم الصفحات</div>
+                </div>
+                <div class="p-4 text-center">
+                    <span class="font-bold text-gray-800 dark:text-gray-200">متابعين، تفاعل</span>
+                </div>
+            </div>
+
         </div>
     </main>
 
-    <!-- الفوتر (يظهر في الكمبيوتر فقط) -->
-    <footer class="hidden md:block border-t border-gray-200 dark:border-gray-800 py-8 mt-16 text-center text-gray-500 text-sm">
-        <p>© 2024 Maro Store. جميع الحقوق محفوظة.</p>
+    <!-- الفوتر -->
+    <footer class="hidden md:block border-t border-gray-200 dark:border-gray-800 py-10 mt-16 text-center text-gray-500 text-sm">
+        <p>© 2025 Madara Store. جميع الحقوق محفوظة.</p>
     </footer>
 
     <!-- الشريط السفلي للموبايل -->
-    <nav class="bottom-nav md:hidden fixed bottom-0 left-0 w-full bg-[var(--card-bg)] flex justify-around items-center py-3 px-2 z-50 rounded-t-2xl border-t border-gray-100 dark:border-gray-800">
+    <nav class="bottom-nav md:hidden fixed bottom-0 left-0 w-full bg-[var(--card-bg)] flex justify-around items-center py-3 px-2 z-40 rounded-t-2xl border-t border-gray-100 dark:border-gray-800">
         <a href="#" class="flex flex-col items-center text-blue-600 gap-1">
             <i class="fa-solid fa-house text-xl"></i>
             <span class="text-[10px] font-bold">الرئيسية</span>
@@ -214,9 +256,9 @@
             <span class="text-[10px] font-bold">السلة</span>
             <span id="cart-count-mobile" class="absolute top-0 right-2 w-4 h-4 bg-blue-600 text-white text-[9px] font-bold flex items-center justify-center rounded-full">0</span>
         </button>
-        <a href="https://t.me/qijub" target="_blank" rel="noopener noreferrer" class="flex flex-col items-center text-gray-400 hover:text-blue-600 transition gap-1">
+        <a href="https://t.me/MadaraPUBGStore" target="_blank" rel="noopener noreferrer" class="flex flex-col items-center text-gray-400 hover:text-blue-600 transition gap-1">
             <i class="fa-brands fa-telegram text-xl"></i>
-            <span class="text-[10px] font-bold">تواصل</span>
+            <span class="text-[10px] font-bold">قناتنا</span>
         </a>
     </nav>
 
@@ -234,20 +276,42 @@
                 <span>المجموع الكلي:</span>
                 <span id="cart-total" class="text-blue-600">$0</span>
             </div>
-            <button onclick="checkout()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-bold text-lg mb-2 transition shadow-lg shadow-blue-500/30">أرسل طلبك إلى تليجرام</button>
+            <button onclick="checkout()" class="w-full btn-neon py-4 rounded-xl font-bold text-lg mb-2">أرسل طلبك إلى تليجرام</button>
             <p class="text-center text-xs text-gray-500">سيتم تحويلك لتليجرام لتأكيد الطلب</p>
         </div>
     </div>
 
+    <!-- نافذة متابعة القناة (Modal) -->
+    <div id="channel-modal" class="fixed inset-0 bg-black/60 z-[200] hidden flex items-center justify-center p-4">
+        <div class="modal-content bg-[var(--card-bg)] w-full max-w-sm rounded-3xl p-8 text-center shadow-2xl relative border border-gray-100 dark:border-gray-800">
+            <button onclick="closeModal()" class="absolute top-4 left-4 w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-500 hover:bg-red-500 hover:text-white transition flex items-center justify-center">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            
+            <div class="w-24 h-24 mx-auto bg-blue-50 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center mb-6 shadow-inner">
+                <i class="fa-solid fa-bolt text-5xl text-blue-600"></i>
+            </div>
+            
+            <h3 class="text-2xl font-black mb-3">تابع قناتنا</h3>
+            <p class="text-gray-500 text-sm mb-8 leading-relaxed">انضم لقناتنا ليصلك كل جديد العروض والتحديثات والدعم الفني المباشر.</p>
+            
+            <a href="https://t.me/MadaraPUBGStore" target="_blank" rel="noopener noreferrer" class="w-full bg-[#0088cc] hover:bg-[#00aced] text-white py-4 rounded-xl font-bold text-lg mb-3 flex items-center justify-center gap-2 transition shadow-lg shadow-blue-500/30" onclick="closeModal()">
+                <i class="fa-brands fa-telegram text-2xl"></i> قناة تيليجرام
+            </a>
+            
+            <button onclick="closeModal()" class="text-sm text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition">إغلاق</button>
+        </div>
+    </div>
+
     <script>
-        // منع الكليك يمين والنسخ
+        // --- حماية أساسية ---
         document.addEventListener('contextmenu', event => event.preventDefault());
         document.onkeydown = function(e) {
             if(e.keyCode == 123) { return false; }
             if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) { return false; }
         }
 
-        // تبديل الوضع الليلي
+        // --- الوضع الليلي ---
         function toggleDarkMode() {
             const body = document.body;
             const icon = document.getElementById('theme-icon');
@@ -262,7 +326,30 @@
             }
         }
 
-        // نظام السلة
+        // --- إدارة الـ Modal ---
+        const modal = document.getElementById('channel-modal');
+
+        function openModal() {
+            modal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            modal.classList.add('hidden');
+        }
+
+        // إظهار الـ Modal بعد ثانيتين من تحميل الصفحة
+        window.addEventListener('load', () => {
+            setTimeout(openModal, 2000);
+        });
+
+        // إغلاق الـ Modal عند النقر خارج المحتوى
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // --- نظام السلة ---
         let cart = [];
         const cartDrawer = document.getElementById('cart-drawer');
         const cartItemsContainer = document.getElementById('cart-items');
@@ -322,7 +409,7 @@
                         <div class="font-bold text-sm">${item.name}</div>
                         <div class="text-blue-600 font-bold">$${item.price * item.qty}</div>
                     </div>
-                    <div class="flex items-center justify-between bg-white dark:bg-gray-900 rounded-lg p-1">
+                    <div class="flex items-center justify-between bg-white dark:bg-gray-900 rounded-lg p-1 border border-gray-100 dark:border-gray-700">
                         <button onclick="decreaseQty(${item.id})" class="w-8 h-8 flex items-center justify-center hover:bg-red-100 hover:text-red-600 rounded-md transition"><i class="fa-solid fa-minus"></i></button>
                         <span class="font-bold">${item.qty}</span>
                         <button onclick="increaseQty(${item.id})" class="w-8 h-8 flex items-center justify-center hover:bg-green-100 hover:text-green-600 rounded-md transition"><i class="fa-solid fa-plus"></i></button>
@@ -338,7 +425,7 @@
                 return;
             }
             
-            let message = "مرحباً Maro Store،\nأريد طلب المنتجات التالية:\n\n";
+            let message = "مرحباً Madara Store،\nأريد طلب المنتجات التالية:\n\n";
             let totalPrice = 0;
             
             cart.forEach((item) => {
@@ -350,8 +437,10 @@
             message += "\nالرجاء تأكيد الطلب وتزويدي بتفاصيل الدفع.";
             
             const encodedMessage = encodeURIComponent(message);
-            window.open(`https://t.me/qijub?text=${encodedMessage}`, '_blank', 'noopener,noreferrer');
+            // استخدام رابط القناة أو بوت الدعم الخاص بك
+            window.open(`https://t.me/MadaraPUBGStore?text=${encodedMessage}`, '_blank', 'noopener,noreferrer');
         }
+
     </script>
 </body>
 </html>
