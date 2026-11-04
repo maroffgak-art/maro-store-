@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MARO | متجر الشحن الرقمي</title>
     
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https:; connect-src 'self' https://api.telegram.org;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://images.unsplash.com https://img.icons8.com; connect-src 'self' https://api.telegram.org;">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -87,20 +87,20 @@
             box-shadow: 0 10px 20px -5px var(--primary-glow);
         }
         
-        /* صور الأقسام */
+        /* صورة غلاف القسم */
         .category-cover {
             width: 100%;
             aspect-ratio: 1 / 1;
             object-fit: cover;
         }
 
-        /* لوجوهات التطبيقات */
-        .app-logo {
+        /* لوجو التطبيق */
+        .app-logo-img {
             width: 100%;
             aspect-ratio: 1 / 1;
             object-fit: contain;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            background: #ffffff; /* خلفية بيضاء للوجو */
         }
 
         .app-info {
@@ -230,7 +230,10 @@
         <div class="modal-content">
             <button onclick="closeSubMenu()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-black/10 flex items-center justify-center hover:bg-red-500 transition text-[var(--text-main)]"><i class="fa-solid fa-xmark"></i></button>
             
-            <img id="modal-img" src="" class="w-20 h-20 mx-auto rounded-2xl object-contain p-2 mb-4 shadow-lg border-2 border-[#0068e8] bg-white">
+            <div class="bg-white rounded-2xl w-24 h-24 mx-auto mb-4 shadow-lg border-2 border-[#0068e8] flex items-center justify-center p-2">
+                <img id="modal-img" src="" class="w-full h-full object-contain">
+            </div>
+            
             <h3 id="modal-title" class="text-2xl font-black mb-6 text-[var(--text-main)] text-center">اسم التطبيق</h3>
             
             <div id="modal-options" class="flex flex-col gap-3">
@@ -240,7 +243,7 @@
     </div>
 
     <script>
-        // الداتا بيز بتاعتنا
+        // الداتا بيز
         const storeData = {
             games: {
                 title: "قسم الألعاب",
@@ -372,6 +375,7 @@
                 const card = document.createElement('div');
                 card.className = 'app-card';
                 card.onclick = () => openCategory(key);
+                // هنا بنستخدم img عشان الصورة تظهر
                 card.innerHTML = `
                     <img src="${cat.cover}" class="category-cover" alt="${cat.title}" loading="lazy">
                     <div class="app-info">
@@ -398,9 +402,10 @@
                 const card = document.createElement('div');
                 card.className = 'app-card';
                 card.onclick = () => openPackages(item.id);
+                // هنا بنستخدم img عشان اللوجو يظهر
                 card.innerHTML = `
-                    <div class="bg-white border-b border-gray-200">
-                        <img src="${item.img}" class="app-logo" alt="${item.name}" loading="lazy">
+                    <div class="bg-white">
+                        <img src="${item.img}" class="app-logo-img" alt="${item.name}" loading="lazy">
                     </div>
                     <div class="app-info">
                         <div class="app-title">${item.name}</div>
