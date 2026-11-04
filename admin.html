@@ -271,15 +271,12 @@
                     description: description || "لا يوجد وصف.", createdAt: Date.now()
                 };
                 
-                // لو في صورة جديدة، نحدثها. لو مفيش صورة جديدة وبنعدل، نسيب القديمة.
                 if (base64Image) productData.image = base64Image;
 
                 if (id) {
-                    // تعديل منتج موجود
                     await updateDoc(doc(db, "products", id), productData);
                     showAlert("تم تعديل المنتج بنجاح!");
                 } else {
-                    // إضافة منتج جديد
                     await addDoc(collection(db, "products"), productData);
                     showAlert("تم إضافة المنتج بنجاح!");
                 }
@@ -343,8 +340,9 @@
                     list.innerHTML = '<div class="col-span-full text-center text-slate-500 py-10">لا توجد منتجات حالياً.</div>';
                     return;
                 }
-                querySnapshot.forEach((document) => {
-                    const data = document.data();
+                // إصلاح الخطأ هنا: تغيير اسم الباراميتر من document إلى docSnap
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
                     const div = document.createElement('div');
                     div.className = 'bg-slate-800 p-4 rounded-xl flex flex-col justify-between border border-slate-700';
                     
@@ -360,8 +358,8 @@
                             </div>
                         </div>
                         <div class="flex justify-between items-center mt-auto pt-3 border-t border-slate-700 gap-2">
-                            <button onclick="editProduct('${document.id}')" class="flex-1 text-cyan-400 hover:text-cyan-300 bg-cyan-500/10 py-1 rounded-lg transition">تعديل</button>
-                            <button onclick="deleteProduct('${document.id}')" class="flex-1 text-red-400 hover:text-red-300 bg-red-500/10 py-1 rounded-lg transition">مسح</button>
+                            <button onclick="editProduct('${docSnap.id}')" class="flex-1 text-cyan-400 hover:text-cyan-300 bg-cyan-500/10 py-1 rounded-lg transition">تعديل</button>
+                            <button onclick="deleteProduct('${docSnap.id}')" class="flex-1 text-red-400 hover:text-red-300 bg-red-500/10 py-1 rounded-lg transition">مسح</button>
                         </div>
                     `;
                     list.appendChild(div);
@@ -411,26 +409,22 @@
                 select.innerHTML = '';
                 
                 if(querySnapshot.empty) {
-                    // أقسام افتراضية لو الداتابيز فاضية
                     currentCategories = [
                         {id:'games', label:'الألعاب', icon:'game'},
                         {id:'subscriptions', label:'الاشتراكات', icon:'play'}
                     ];
                 } else {
-                    querySnapshot.forEach((doc) => {
-                        currentCategories.push({ id: doc.id, ...doc.data() });
+                    querySnapshot.forEach((docSnap) => {
+                        currentCategories.push({ id: docSnap.id, ...docSnap.data() });
                     });
                 }
 
-                // ترتيب الأقسام لو ليها order
                 currentCategories.sort((a,b) => (a.order || 0) - (b.order || 0));
 
-                // تعبئة القائمة المنسدلة للمنتجات
                 currentCategories.forEach(c => {
                     select.innerHTML += `<option value="${c.id}">${c.label}</option>`;
                 });
 
-                // عرض الأقسام
                 currentCategories.forEach(c => {
                     const div = document.createElement('div');
                     div.className = 'bg-slate-800 p-4 rounded-xl flex justify-between items-center border border-slate-700';
