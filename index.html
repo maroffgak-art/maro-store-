@@ -3,350 +3,493 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Madara Store | متجرك الرقمي الاحترافي</title>
+    <title>Madara Store | Premium 8K Digital Market</title>
     
-    <!-- سياسة الأمان CSP (تسمح بالأيقونات والخطوط والصور) -->
+    <!-- سياسة الأمان CSP -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://images.unsplash.com https://cdn-icons-png.flaticon.com; connect-src 'self' https://api.telegram.org;">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --primary: #2563eb;
-            --bg-color: #f8fafc;
-            --text-color: #1e293b;
-            --card-bg: #ffffff;
-        }
-
-        .dark-mode {
-            --bg-color: #0f172a;
-            --text-color: #f8fafc;
-            --card-bg: #1e293b;
+            --primary: #00f2fe;
+            --secondary: #4facfe;
+            --bg-dark: #050505;
+            --card-bg: rgba(255, 255, 255, 0.03);
         }
 
         body {
-            font-family: 'Tajawal', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            transition: background-color 0.3s, color 0.3s;
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-dark);
+            color: #fff;
             overflow-x: hidden;
-            
             -webkit-user-select: none; 
             -webkit-touch-callout: none; 
-            -moz-user-select: none;
-            -ms-user-select: none;
             user-select: none;
         }
 
-        .category-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            overflow: hidden;
-            position: relative;
+        /* خلفية شبكية وإضاءات 8K */
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -2;
+            mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+            -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
         }
-        .category-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.15);
-        }
-        .category-card:hover .card-bg-image {
-            transform: scale(1.05);
+        .glow-1 { position: fixed; top: -10%; right: -10%; width: 50vw; height: 50vw; background: radial-gradient(circle, rgba(0,242,254,0.1) 0%, transparent 70%); z-index: -1; }
+        .glow-2 { position: fixed; bottom: -10%; left: -10%; width: 50vw; height: 50vw; background: radial-gradient(circle, rgba(79,172,254,0.1) 0%, transparent 70%); z-index: -1; }
+
+        /* الزجاج الفاخر */
+        .glass {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
         }
 
-        .card-bg-image {
+        /* تدرج النص */
+        .text-gradient {
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* تأثير 3D للكروت */
+        .card-3d {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transform-style: preserve-3d;
+        }
+        .card-3d:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 35px -5px rgba(0, 242, 254, 0.2);
+            border-color: rgba(0, 242, 254, 0.4);
+        }
+        
+        .card-image {
             transition: transform 0.5s ease;
         }
-
-        .card-overlay {
-            background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+        .card-3d:hover .card-image {
+            transform: scale(1.1);
         }
 
-        .bottom-nav {
-            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
-        }
-        .dark-mode .bottom-nav {
-            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
-            border-top: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .btn-neon {
-            background: var(--primary);
-            color: white;
+        /* أزرار النيون */
+        .btn-primary {
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            color: #000;
+            font-weight: 900;
             transition: all 0.3s ease;
         }
-        .btn-neon:hover {
-            background: #1d4ed8;
-            box-shadow: 0 0 20px rgba(37, 99, 235, 0.4);
+        .btn-primary:hover {
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.5);
+            transform: scale(1.02);
         }
 
-        /* تنسيقات الـ Modal */
-        #channel-modal {
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
+        /* الأنيميشن للـ Modals */
+        .modal-overlay {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
         }
         .modal-content {
-            animation: modalPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: translateY(20px) scale(0.95);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        @keyframes modalPop {
-            0% { transform: scale(0.8); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
+        .modal-overlay.active .modal-content {
+            transform: translateY(0) scale(1);
         }
+
+        /* إخفاء السكرول بار */
+        ::-webkit-scrollbar { width: 0px; background: transparent; }
     </style>
 </head>
 <body class="pb-24 md:pb-0">
 
+    <div class="bg-grid"></div>
+    <div class="glow-1"></div>
+    <div class="glow-2"></div>
+
     <!-- الهيدر -->
-    <header class="sticky top-0 z-40 bg-[var(--card-bg)] shadow-sm transition-colors duration-300">
-        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center gap-2">
-                <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center text-xl font-bold shadow-inner">
-                    <i class="fa-solid fa-bolt"></i>
+    <header class="fixed top-0 w-full z-40 glass border-b border-white/5 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <!-- اللوجو -->
+            <a href="#" class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#00f2fe] to-[#4facfe] flex items-center justify-center shadow-lg shadow-cyan-500/30">
+                    <i class="fa-solid fa-cube text-black text-lg"></i>
                 </div>
-                <span class="text-xl font-black tracking-wide">Madara Store</span>
-            </div>
+                <span class="text-2xl font-black tracking-widest text-white">MADARA<span class="text-gradient">.</span></span>
+            </a>
             
+            <!-- روابط الديسكتوب -->
+            <nav class="hidden md:flex gap-8 font-bold text-gray-400 text-sm">
+                <a href="#" class="text-white transition">الرئيسية</a>
+                <a href="#categories" class="hover:text-[#00f2fe] transition">الفئات</a>
+                <a href="https://t.me/MadaraPUBGStore" target="_blank" class="hover:text-[#00f2fe] transition">الدعم الفني</a>
+            </nav>
+            
+            <!-- الأزرار -->
             <div class="flex items-center gap-3">
-                <button onclick="toggleDarkMode()" class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-200 transition">
-                    <i id="theme-icon" class="fa-solid fa-moon"></i>
+                <!-- زرار تسجيل الدخول -->
+                <button onclick="openAuthModal()" class="hidden md:flex items-center gap-2 px-5 py-2 rounded-full glass hover:bg-white/10 transition text-sm font-bold border border-white/10">
+                    <i class="fa-regular fa-user"></i> تسجيل الدخول
                 </button>
-                <button onclick="toggleCart()" class="relative w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-200 transition">
-                    <i class="fa-solid fa-cart-shopping"></i>
-                    <span id="cart-count" class="absolute -top-1 -right-1 w-5 h-5 bg-blue-600 text-white text-xs font-bold flex items-center justify-center rounded-full shadow-lg">0</span>
+                
+                <!-- زرار السلة -->
+                <button onclick="toggleCart()" class="relative w-10 h-10 rounded-full glass flex items-center justify-center hover:bg-white/10 transition group">
+                    <i class="fa-solid fa-cart-shopping text-gray-300 group-hover:text-white transition"></i>
+                    <span id="cart-count" class="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-r from-[#00f2fe] to-[#4facfe] text-black text-xs font-black flex items-center justify-center rounded-full shadow-lg">0</span>
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- المحتوى الرئيسي -->
-    <main class="max-w-6xl mx-auto px-4 mt-6">
+    <!-- الهيرو (Hero Section) -->
+    <section class="relative pt-40 pb-20 px-6 z-10 flex flex-col items-center text-center">
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-[#00f2fe] text-sm font-bold mb-8 border border-[#00f2fe]/30">
+            <span class="w-2 h-2 rounded-full bg-[#00f2fe] animate-pulse"></span>
+            جودة خارقة | تسليم فوري 24/7
+        </div>
         
-        <!-- البانر -->
-        <div class="relative w-full h-56 md:h-72 rounded-3xl overflow-hidden shadow-2xl">
-            <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1200" alt="Digital Banner" class="absolute inset-0 w-full h-full object-cover">
-            <div class="absolute inset-0 bg-gradient-to-r from-[#0f172a]/95 to-transparent"></div>
+        <h1 class="text-5xl md:text-7xl font-black leading-tight mb-6">
+            متجرك الرقمي <br>
+            <span class="text-gradient">بجودة 8K.</span>
+        </h1>
+        
+        <p class="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+            كل ما تحتاجه من ألعاب، اشتراكات، حسابات، وخدمات رقمية في منصة واحدة احترافية. آمن، سريع، وموثوق.
+        </p>
+        
+        <div class="flex flex-col sm:flex-row gap-4">
+            <a href="#categories" class="btn-primary px-10 py-4 rounded-xl text-lg flex items-center justify-center gap-2">
+                <i class="fa-solid fa-store"></i> تصفح المتجر
+            </a>
+            <button onclick="openAuthModal()" class="glass px-10 py-4 rounded-xl text-lg font-bold hover:bg-white/10 transition flex items-center justify-center gap-2">
+                <i class="fa-solid fa-right-to-bracket text-[#00f2fe]"></i> إنشاء حساب
+            </button>
+        </div>
+    </section>
+
+    <!-- شبكة الفئات (All Categories) -->
+    <section id="categories" class="py-20 px-6 relative z-10 max-w-7xl mx-auto">
+        <div class="flex items-center gap-3 mb-10">
+            <div class="w-2 h-8 bg-gradient-to-b from-[#00f2fe] to-[#4facfe] rounded-full"></div>
+            <h2 class="text-3xl font-black">جميع <span class="text-gradient">الفئات</span></h2>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
             
-            <div class="relative z-10 h-full flex flex-col justify-center px-8 md:px-12">
-                <span class="text-blue-400 font-bold mb-2 tracking-wider text-sm">PREMIUM DIGITAL STORE</span>
-                <h1 class="text-4xl md:text-6xl font-black text-white mb-4 leading-tight">أفضل المنتجات الرقمية<br>في مكان واحد</h1>
-                <a href="#categories" class="bg-blue-600 hover:bg-blue-700 text-white w-fit px-8 py-3 rounded-full font-bold text-sm transition shadow-lg shadow-blue-500/30">تصفح الآن</a>
+            <!-- 1. الألعاب -->
+            <div class="card-3d glass rounded-2xl overflow-hidden cursor-pointer" onclick="addToCart(1, 'شحن ألعاب (ببجي/فري فاير)', 15)">
+                <div class="h-40 overflow-hidden relative">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=400" class="card-image w-full h-full object-cover opacity-80" alt="Games">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent"></div>
+                    <i class="fa-solid fa-gamepad absolute bottom-4 right-4 text-3xl text-[#00f2fe] z-10"></i>
+                </div>
+                <div class="p-5">
+                    <h3 class="font-bold text-lg mb-1">شحن الألعاب</h3>
+                    <p class="text-gray-400 text-sm">ببجي، فري فاير، كول أوف ديوتي</p>
+                </div>
             </div>
+
+            <!-- 2. الاشتراكات -->
+            <div class="card-3d glass rounded-2xl overflow-hidden cursor-pointer" onclick="addToCart(2, 'اشتراكات ترفيهية', 10)">
+                <div class="h-40 overflow-hidden relative">
+                    <img src="https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?auto=format&fit=crop&q=80&w=400" class="card-image w-full h-full object-cover opacity-80" alt="Subs">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent"></div>
+                    <i class="fa-solid fa-play absolute bottom-4 right-4 text-3xl text-red-500 z-10"></i>
+                </div>
+                <div class="p-5">
+                    <h3 class="font-bold text-lg mb-1">الاشتراكات</h3>
+                    <p class="text-gray-400 text-sm">نتفليكس، شاهد، سبوتيفاي</p>
+                </div>
+            </div>
+
+            <!-- 3. السوشيال ميديا -->
+            <div class="card-3d glass rounded-2xl overflow-hidden cursor-pointer" onclick="addToCart(3, 'دعم السوشيال ميديا', 5)">
+                <div class="h-40 overflow-hidden relative">
+                    <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&q=80&w=400" class="card-image w-full h-full object-cover opacity-80" alt="Social">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent"></div>
+                    <i class="fa-solid fa-thumbs-up absolute bottom-4 right-4 text-3xl text-blue-500 z-10"></i>
+                </div>
+                <div class="p-5">
+                    <h3 class="font-bold text-lg mb-1">السوشيال ميديا</h3>
+                    <p class="text-gray-400 text-sm">متابعين، لايكات، مشاهدات</p>
+                </div>
+            </div>
+
+            <!-- 4. الحسابات الجاهزة -->
+            <div class="card-3d glass rounded-2xl overflow-hidden cursor-pointer" onclick="addToCart(4, 'حسابات جاهزة', 25)">
+                <div class="h-40 overflow-hidden relative">
+                    <img src="https://images.unsplash.com/photo-1555421689-491a97ff2040?auto=format&fit=crop&q=80&w=400" class="card-image w-full h-full object-cover opacity-80" alt="Accounts">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent"></div>
+                    <i class="fa-solid fa-users absolute bottom-4 right-4 text-3xl text-purple-500 z-10"></i>
+                </div>
+                <div class="p-5">
+                    <h3 class="font-bold text-lg mb-1">حسابات جاهزة</h3>
+                    <p class="text-gray-400 text-sm">نتفليكس، شاهد، بلايستيشن</p>
+                </div>
+            </div>
+
+            <!-- 5. العملات الرقمية -->
+            <div class="card-3d glass rounded-2xl overflow-hidden cursor-pointer" onclick="addToCart(5, 'شحن محافظ كريبتو', 50)">
+                <div class="h-40 overflow-hidden relative">
+                    <img src="https://images.unsplash.com/photo-1621416894569-0f39ed31d247?auto=format&fit=crop&q=80&w=400" class="card-image w-full h-full object-cover opacity-80" alt="Crypto">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent"></div>
+                    <i class="fa-brands fa-bitcoin absolute bottom-4 right-4 text-3xl text-yellow-500 z-10"></i>
+                </div>
+                <div class="p-5">
+                    <h3 class="font-bold text-lg mb-1">العملات الرقمية</h3>
+                    <p class="text-gray-400 text-sm">USDT، TON، BTC</p>
+                </div>
+            </div>
+
+            <!-- 6. التصميم -->
+            <div class="card-3d glass rounded-2xl overflow-hidden cursor-pointer" onclick="addToCart(6, 'تصميم شعارات', 30)">
+                <div class="h-40 overflow-hidden relative">
+                    <img src="https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&q=80&w=400" class="card-image w-full h-full object-cover opacity-80" alt="Design">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent"></div>
+                    <i class="fa-solid fa-pen-nib absolute bottom-4 right-4 text-3xl text-pink-500 z-10"></i>
+                </div>
+                <div class="p-5">
+                    <h3 class="font-bold text-lg mb-1">التصميم والإبداع</h3>
+                    <p class="text-gray-400 text-sm">شعارات، بانرات، هوية بصرية</p>
+                </div>
+            </div>
+
+            <!-- 7. برامج الكمبيوتر -->
+            <div class="card-3d glass rounded-2xl overflow-hidden cursor-pointer" onclick="addToCart(7, 'تفعيل برامج', 15)">
+                <div class="h-40 overflow-hidden relative">
+                    <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=400" class="card-image w-full h-full object-cover opacity-80" alt="Software">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent"></div>
+                    <i class="fa-brands fa-windows absolute bottom-4 right-4 text-3xl text-blue-400 z-10"></i>
+                </div>
+                <div class="p-5">
+                    <h3 class="font-bold text-lg mb-1">السوفتوير</h3>
+                    <p class="text-gray-400 text-sm">ويندوز، أوفيس، أدوبي</p>
+                </div>
+            </div>
+
+            <!-- 8. بطاقات الهدايا -->
+            <div class="card-3d glass rounded-2xl overflow-hidden cursor-pointer" onclick="addToCart(8, 'بطاقات هدايا', 20)">
+                <div class="h-40 overflow-hidden relative">
+                    <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&q=80&w=400" class="card-image w-full h-full object-cover opacity-80" alt="Gift">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent"></div>
+                    <i class="fa-solid fa-gift absolute bottom-4 right-4 text-3xl text-emerald-500 z-10"></i>
+                </div>
+                <div class="p-5">
+                    <h3 class="font-bold text-lg mb-1">بطاقات الهدايا</h3>
+                    <p class="text-gray-400 text-sm">جوجل بلاي، آيتونز، ستيم</p>
+                </div>
+            </div>
+
+            <!-- 9. الحوالات المالية -->
+            <div class="card-3d glass rounded-2xl overflow-hidden cursor-pointer" onclick="addToCart(9, 'حوالات مالية', 100)">
+                <div class="h-40 overflow-hidden relative">
+                    <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&q=80&w=400" class="card-image w-full h-full object-cover opacity-80" alt="Finance">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent"></div>
+                    <i class="fa-solid fa-money-bill-transfer absolute bottom-4 right-4 text-3xl text-green-500 z-10"></i>
+                </div>
+                <div class="p-5">
+                    <h3 class="font-bold text-lg mb-1">الحوالات المالية</h3>
+                    <p class="text-gray-400 text-sm">شام كاش، باي بال، فيزا</p>
+                </div>
+            </div>
+
+            <!-- 10. خدمات التصميم -->
+            <div class="card-3d glass rounded-2xl overflow-hidden cursor-pointer" onclick="addToCart(10, 'تصميم مواقع', 150)">
+                <div class="h-40 overflow-hidden relative">
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=400" class="card-image w-full h-full object-cover opacity-80" alt="Web">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent"></div>
+                    <i class="fa-solid fa-code absolute bottom-4 right-4 text-3xl text-cyan-500 z-10"></i>
+                </div>
+                <div class="p-5">
+                    <h3 class="font-bold text-lg mb-1">تطوير المواقع</h3>
+                    <p class="text-gray-400 text-sm">متاجر، مواقع شخصية، لوحات تحكم</p>
+                </div>
+            </div>
+
+            <!-- 11. فك الحظر -->
+            <div class="card-3d glass rounded-2xl overflow-hidden cursor-pointer" onclick="addToCart(11, 'فك حظر حسابات', 40)">
+                <div class="h-40 overflow-hidden relative">
+                    <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&q=80&w=400" class="card-image w-full h-full object-cover opacity-80" alt="Unban">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent"></div>
+                    <i class="fa-solid fa-unlock absolute bottom-4 right-4 text-3xl text-red-500 z-10"></i>
+                </div>
+                <div class="p-5">
+                    <h3 class="font-bold text-lg mb-1">فك الحظر</h3>
+                    <p class="text-gray-400 text-sm">واتساب، انستجرام، فيسبوك</p>
+                </div>
+            </div>
+
+            <!-- 12. خدمات أخرى -->
+            <div class="card-3d glass rounded-2xl overflow-hidden cursor-pointer" onclick="addToCart(12, 'خدمات أخرى', 10)">
+                <div class="h-40 overflow-hidden relative">
+                    <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&q=80&w=400" class="card-image w-full h-full object-cover opacity-80" alt="Other">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent"></div>
+                    <i class="fa-solid fa-star absolute bottom-4 right-4 text-3xl text-yellow-400 z-10"></i>
+                </div>
+                <div class="p-5">
+                    <h3 class="font-bold text-lg mb-1">خدمات متوعة</h3>
+                    <p class="text-gray-400 text-sm">أي شيء آخر تريده</p>
+                </div>
+            </div>
+
         </div>
-
-        <!-- عنوان الأقسام -->
-        <div class="flex items-center justify-between mt-12 mb-8">
-            <div class="flex items-center gap-3">
-                <div class="w-1.5 h-8 bg-blue-600 rounded-full"></div>
-                <h2 class="text-2xl font-black">كل الفئات</h2>
-            </div>
-        </div>
-
-        <!-- شبكة الفئات -->
-        <div id="categories" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-            
-            <div class="category-card bg-[var(--card-bg)] rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 cursor-pointer" onclick="addToCart(1, 'تطبيقات الدردشة', 5)">
-                <div class="relative h-40 overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&q=80&w=400" class="card-bg-image w-full h-full object-cover" alt="Chat">
-                    <div class="card-overlay absolute inset-0"></div>
-                    <div class="absolute bottom-3 right-3 z-10 text-white font-black text-lg drop-shadow-md">تطبيقات الدردشة</div>
-                </div>
-                <div class="p-4 text-center">
-                    <span class="font-bold text-gray-800 dark:text-gray-200">واتساب، تليجرام</span>
-                </div>
-            </div>
-
-            <div class="category-card bg-[var(--card-bg)] rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 cursor-pointer" onclick="addToCart(2, 'قسم الألعاب', 15)">
-                <div class="relative h-40 overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=400" class="card-bg-image w-full h-full object-cover" alt="Games">
-                    <div class="card-overlay absolute inset-0"></div>
-                    <div class="absolute bottom-3 right-3 z-10 text-white font-black text-lg drop-shadow-md">قسم الألعاب</div>
-                </div>
-                <div class="p-4 text-center">
-                    <span class="font-bold text-gray-800 dark:text-gray-200">ببجي، فري فاير</span>
-                </div>
-            </div>
-
-            <div class="category-card bg-[var(--card-bg)] rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 cursor-pointer" onclick="addToCart(3, 'عروض عامة', 10)">
-                <div class="relative h-40 overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&q=80&w=400" class="card-bg-image w-full h-full object-cover" alt="Offers">
-                    <div class="card-overlay absolute inset-0"></div>
-                    <div class="absolute bottom-3 right-3 z-10 text-white font-black text-lg drop-shadow-md">عروض عامة</div>
-                </div>
-                <div class="p-4 text-center">
-                    <span class="font-bold text-gray-800 dark:text-gray-200">🔥 خصومات حصرية</span>
-                </div>
-            </div>
-
-            <div class="category-card bg-[var(--card-bg)] rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 cursor-pointer" onclick="addToCart(4, 'الحوالات المالية', 20)">
-                <div class="relative h-40 overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&q=80&w=400" class="card-bg-image w-full h-full object-cover" alt="Finance">
-                    <div class="card-overlay absolute inset-0"></div>
-                    <div class="absolute bottom-3 right-3 z-10 text-white font-black text-lg drop-shadow-md">الحوالات المالية</div>
-                </div>
-                <div class="p-4 text-center">
-                    <span class="font-bold text-gray-800 dark:text-gray-200">فيزا، شام كاش</span>
-                </div>
-            </div>
-
-            <div class="category-card bg-[var(--card-bg)] rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 cursor-pointer" onclick="addToCart(5, 'الاشتراكات', 12)">
-                <div class="relative h-40 overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?auto=format&fit=crop&q=80&w=400" class="card-bg-image w-full h-full object-cover" alt="Subscriptions">
-                    <div class="card-overlay absolute inset-0"></div>
-                    <div class="absolute bottom-3 right-3 z-10 text-white font-black text-lg drop-shadow-md">الاشتراكات</div>
-                </div>
-                <div class="p-4 text-center">
-                    <span class="font-bold text-gray-800 dark:text-gray-200">نتفليكس، شاهد</span>
-                </div>
-            </div>
-
-            <div class="category-card bg-[var(--card-bg)] rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 cursor-pointer" onclick="addToCart(6, 'الدفع الإلكتروني', 8)">
-                <div class="relative h-40 overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1621504450181-5d356f61d307?auto=format&fit=crop&q=80&w=400" class="card-bg-image w-full h-full object-cover" alt="E-Payment">
-                    <div class="card-overlay absolute inset-0"></div>
-                    <div class="absolute bottom-3 right-3 z-10 text-white font-black text-lg drop-shadow-md">الدفع الإلكتروني</div>
-                </div>
-                <div class="p-4 text-center">
-                    <span class="font-bold text-gray-800 dark:text-gray-200">محافظ رقمية، كريبتو</span>
-                </div>
-            </div>
-
-            <div class="category-card bg-[var(--card-bg)] rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 cursor-pointer" onclick="addToCart(7, 'خدمات متوعة', 25)">
-                <div class="relative h-40 overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1614680376573-df3480f0c6ff?auto=format&fit=crop&q=80&w=400" class="card-bg-image w-full h-full object-cover" alt="Misc">
-                    <div class="card-overlay absolute inset-0"></div>
-                    <div class="absolute bottom-3 right-3 z-10 text-white font-black text-lg drop-shadow-md">خدمات متوعة</div>
-                </div>
-                <div class="p-4 text-center">
-                    <span class="font-bold text-gray-800 dark:text-gray-200">آيتونز، جوجل بلاي</span>
-                </div>
-            </div>
-
-            <div class="category-card bg-[var(--card-bg)] rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 cursor-pointer" onclick="addToCart(8, 'دعم الصفحات', 30)">
-                <div class="relative h-40 overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1611926653458-09294b3142bf?auto=format&fit=crop&q=80&w=400" class="card-bg-image w-full h-full object-cover" alt="Page Support">
-                    <div class="card-overlay absolute inset-0"></div>
-                    <div class="absolute bottom-3 right-3 z-10 text-white font-black text-lg drop-shadow-md">دعم الصفحات</div>
-                </div>
-                <div class="p-4 text-center">
-                    <span class="font-bold text-gray-800 dark:text-gray-200">متابعين، تفاعل</span>
-                </div>
-            </div>
-
-        </div>
-    </main>
+    </section>
 
     <!-- الفوتر -->
-    <footer class="hidden md:block border-t border-gray-200 dark:border-gray-800 py-10 mt-16 text-center text-gray-500 text-sm">
-        <p>© 2025 Madara Store. جميع الحقوق محفوظة.</p>
+    <footer class="border-t border-white/5 py-8 text-center text-gray-500 text-sm relative z-10">
+        <p>© 2025 Madara Store. جميع الحقوق محفوظة. صُنع بجودة 8K.</p>
     </footer>
 
     <!-- الشريط السفلي للموبايل -->
-    <nav class="bottom-nav md:hidden fixed bottom-0 left-0 w-full bg-[var(--card-bg)] flex justify-around items-center py-3 px-2 z-40 rounded-t-2xl border-t border-gray-100 dark:border-gray-800">
-        <a href="#" class="flex flex-col items-center text-blue-600 gap-1">
-            <i class="fa-solid fa-house text-xl"></i>
+    <nav class="md:hidden fixed bottom-0 w-full glass border-t border-white/10 flex justify-around items-center py-3 px-2 z-40 rounded-t-2xl">
+        <a href="#" class="flex flex-col items-center text-[#00f2fe] gap-1">
+            <i class="fa-solid fa-house text-lg"></i>
             <span class="text-[10px] font-bold">الرئيسية</span>
         </a>
-        <a href="#categories" class="flex flex-col items-center text-gray-400 hover:text-blue-600 transition gap-1">
-            <i class="fa-solid fa-table-cells-large text-xl"></i>
+        <a href="#categories" class="flex flex-col items-center text-gray-400 hover:text-white transition gap-1">
+            <i class="fa-solid fa-table-cells-large text-lg"></i>
             <span class="text-[10px] font-bold">الفئات</span>
         </a>
-        <button onclick="toggleCart()" class="flex flex-col items-center text-gray-400 hover:text-blue-600 transition gap-1 relative">
-            <i class="fa-solid fa-cart-shopping text-xl"></i>
+        <button onclick="toggleCart()" class="flex flex-col items-center text-gray-400 hover:text-white transition gap-1 relative">
+            <i class="fa-solid fa-cart-shopping text-lg"></i>
             <span class="text-[10px] font-bold">السلة</span>
-            <span id="cart-count-mobile" class="absolute top-0 right-2 w-4 h-4 bg-blue-600 text-white text-[9px] font-bold flex items-center justify-center rounded-full">0</span>
+            <span id="cart-count-mobile" class="absolute top-0 right-2 w-4 h-4 bg-[#00f2fe] text-black text-[9px] font-black flex items-center justify-center rounded-full">0</span>
         </button>
-        <a href="https://t.me/MadaraPUBGStore" target="_blank" rel="noopener noreferrer" class="flex flex-col items-center text-gray-400 hover:text-blue-600 transition gap-1">
-            <i class="fa-brands fa-telegram text-xl"></i>
-            <span class="text-[10px] font-bold">قناتنا</span>
-        </a>
+        <button onclick="openAuthModal()" class="flex flex-col items-center text-gray-400 hover:text-white transition gap-1">
+            <i class="fa-regular fa-user text-lg"></i>
+            <span class="text-[10px] font-bold">حسابي</span>
+        </button>
     </nav>
 
-    <!-- السلة الجانبية -->
-    <div id="cart-drawer" class="fixed inset-y-0 right-0 w-full md:w-96 bg-[var(--card-bg)] shadow-2xl z-[100] transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col border-l border-gray-200 dark:border-gray-800">
-        <div class="p-6 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center">
-            <h3 class="text-xl font-black flex items-center gap-2"><i class="fa-solid fa-cart-shopping text-blue-600"></i> سلة المشتريات</h3>
-            <button onclick="toggleCart()" class="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center hover:bg-red-500 hover:text-white transition"><i class="fa-solid fa-xmark"></i></button>
+    <!-- سلة المشتريات -->
+    <div id="cart-drawer" class="fixed inset-y-0 right-0 w-full md:w-96 glass border-l border-white/10 z-[100] transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
+        <div class="p-6 border-b border-white/10 flex justify-between items-center bg-white/5">
+            <h3 class="text-xl font-black flex items-center gap-2"><i class="fa-solid fa-cart-shopping text-[#00f2fe]"></i> سلة المشتريات</h3>
+            <button onclick="toggleCart()" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-red-500 transition"><i class="fa-solid fa-xmark"></i></button>
         </div>
         <div id="cart-items" class="flex-1 p-6 overflow-y-auto flex flex-col gap-4">
             <div class="text-center text-gray-500 mt-10">السلة فارغة حالياً</div>
         </div>
-        <div class="p-6 border-t border-gray-100 dark:border-gray-800">
+        <div class="p-6 border-t border-white/10 bg-white/5">
             <div class="flex justify-between items-center mb-4 text-xl font-black">
                 <span>المجموع الكلي:</span>
-                <span id="cart-total" class="text-blue-600">$0</span>
+                <span id="cart-total" class="text-[#00f2fe]">$0</span>
             </div>
-            <button onclick="checkout()" class="w-full btn-neon py-4 rounded-xl font-bold text-lg mb-2">أرسل طلبك إلى تليجرام</button>
-            <p class="text-center text-xs text-gray-500">سيتم تحويلك لتليجرام لتأكيد الطلب</p>
+            <button onclick="checkout()" class="w-full btn-primary py-4 rounded-xl text-lg mb-2">أرسل طلبك إلى تليجرام</button>
+            <p class="text-center text-xs text-gray-400">سيتم تحويلك لتليجرام لتأكيد الطلب</p>
         </div>
     </div>
 
-    <!-- نافذة متابعة القناة (Modal) -->
-    <div id="channel-modal" class="fixed inset-0 bg-black/60 z-[200] hidden flex items-center justify-center p-4">
-        <div class="modal-content bg-[var(--card-bg)] w-full max-w-sm rounded-3xl p-8 text-center shadow-2xl relative border border-gray-100 dark:border-gray-800">
-            <button onclick="closeModal()" class="absolute top-4 left-4 w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-500 hover:bg-red-500 hover:text-white transition flex items-center justify-center">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
+    <!-- Modal تسجيل الدخول -->
+    <div id="auth-modal" class="modal-overlay fixed inset-0 z-[150] flex items-center justify-center p-4">
+        <div class="modal-content glass w-full max-w-md rounded-3xl p-8 relative">
+            <button onclick="closeAuthModal()" class="absolute top-6 left-6 w-8 h-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/20 transition"><i class="fa-solid fa-xmark"></i></button>
             
-            <div class="w-24 h-24 mx-auto bg-blue-50 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center mb-6 shadow-inner">
-                <i class="fa-solid fa-bolt text-5xl text-blue-600"></i>
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 bg-gradient-to-tr from-[#00f2fe] to-[#4facfe] rounded-2xl mx-auto flex items-center justify-center shadow-lg shadow-cyan-500/30 mb-4">
+                    <i class="fa-solid fa-user-astronaut text-black text-2xl"></i>
+                </div>
+                <h2 class="text-2xl font-black mb-2">مرحباً بعودتك</h2>
+                <p class="text-gray-400 text-sm">سجل دخولك للوصول إلى مشترياتك</p>
+            </div>
+
+            <form onsubmit="event.preventDefault(); closeAuthModal();">
+                <div class="mb-4">
+                    <label class="block text-sm font-bold text-gray-300 mb-2">البريد الإلكتروني</label>
+                    <div class="relative">
+                        <i class="fa-regular fa-envelope absolute right-4 top-1/2 -translate-y-1/2 text-gray-500"></i>
+                        <input type="email" placeholder="you@example.com" class="w-full bg-black/50 border border-white/10 rounded-xl py-3 pr-12 pl-4 text-white focus:outline-none focus:border-[#00f2fe] transition" required>
+                    </div>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-sm font-bold text-gray-300 mb-2">كلمة المرور</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-lock absolute right-4 top-1/2 -translate-y-1/2 text-gray-500"></i>
+                        <input type="password" placeholder="••••••••" class="w-full bg-black/50 border border-white/10 rounded-xl py-3 pr-12 pl-4 text-white focus:outline-none focus:border-[#00f2fe] transition" required>
+                    </div>
+                </div>
+                <button type="submit" class="w-full btn-primary py-3 rounded-xl mb-4">تسجيل الدخول</button>
+                
+                <div class="text-center">
+                    <span class="text-gray-400 text-sm">ليس لديك حساب؟ </span>
+                    <a href="#" class="text-[#00f2fe] text-sm font-bold hover:underline">إنشاء حساب جديد</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal قناة تليجرام (زي الصورة) -->
+    <div id="channel-modal" class="modal-overlay fixed inset-0 z-[150] flex items-center justify-center p-4">
+        <div class="modal-content glass w-full max-w-sm rounded-[2rem] p-8 text-center relative shadow-2xl">
+            <button onclick="closeChannelModal()" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-black/20 flex items-center justify-center text-gray-400 hover:text-white transition"><i class="fa-solid fa-xmark"></i></button>
+            
+            <div class="w-24 h-24 mx-auto bg-white rounded-3xl flex items-center justify-center mb-6 shadow-xl border-4 border-white/10 overflow-hidden">
+                <!-- صورة القناة أو اللوجو -->
+                <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&q=80&w=200" alt="Channel" class="w-full h-full object-cover">
             </div>
             
-            <h3 class="text-2xl font-black mb-3">تابع قناتنا</h3>
-            <p class="text-gray-500 text-sm mb-8 leading-relaxed">انضم لقناتنا ليصلك كل جديد العروض والتحديثات والدعم الفني المباشر.</p>
+            <h3 class="text-2xl font-black mb-2 text-white">تابع قنواتنا</h3>
+            <p class="text-gray-400 text-sm mb-8 leading-relaxed">انضم لقناتنا ليصلك كل جديد العروض والتحديثات والدعم الفني المباشر.</p>
             
-            <a href="https://t.me/MadaraPUBGStore" target="_blank" rel="noopener noreferrer" class="w-full bg-[#0088cc] hover:bg-[#00aced] text-white py-4 rounded-xl font-bold text-lg mb-3 flex items-center justify-center gap-2 transition shadow-lg shadow-blue-500/30" onclick="closeModal()">
-                <i class="fa-brands fa-telegram text-2xl"></i> قناة تيليجرام
+            <a href="https://t.me/MadaraPUBGStore" target="_blank" rel="noopener noreferrer" class="w-full btn-primary py-4 rounded-xl text-lg flex items-center justify-center gap-2 mb-3" onclick="closeChannelModal()">
+                <i class="fa-brands fa-telegram"></i> قناة تيليجرام
             </a>
             
-            <button onclick="closeModal()" class="text-sm text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition">إغلاق</button>
+            <button onclick="closeChannelModal()" class="text-sm text-gray-400 hover:text-white transition">إغلاق</button>
         </div>
     </div>
 
     <script>
-        // --- حماية أساسية ---
+        // حماية أساسية
         document.addEventListener('contextmenu', event => event.preventDefault());
         document.onkeydown = function(e) {
             if(e.keyCode == 123) { return false; }
             if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) { return false; }
         }
 
-        // --- الوضع الليلي ---
-        function toggleDarkMode() {
-            const body = document.body;
-            const icon = document.getElementById('theme-icon');
-            body.classList.toggle('dark-mode');
-            
-            if(body.classList.contains('dark-mode')) {
-                icon.classList.remove('fa-moon');
-                icon.classList.add('fa-sun');
-            } else {
-                icon.classList.remove('fa-sun');
-                icon.classList.add('fa-moon');
-            }
+        // --- إدارة المودال (Auth & Channel) ---
+        const authModal = document.getElementById('auth-modal');
+        const channelModal = document.getElementById('channel-modal');
+
+        function openAuthModal() {
+            authModal.classList.add('active');
+        }
+        function closeAuthModal() {
+            authModal.classList.remove('active');
         }
 
-        // --- إدارة الـ Modal ---
-        const modal = document.getElementById('channel-modal');
-
-        function openModal() {
-            modal.classList.remove('hidden');
+        function openChannelModal() {
+            channelModal.classList.add('active');
+        }
+        function closeChannelModal() {
+            channelModal.classList.remove('active');
         }
 
-        function closeModal() {
-            modal.classList.add('hidden');
-        }
-
-        // إظهار الـ Modal بعد ثانيتين من تحميل الصفحة
+        // إظهار مودال القناة بعد 3 ثواني من فتح الموقع
         window.addEventListener('load', () => {
-            setTimeout(openModal, 2000);
+            setTimeout(openChannelModal, 3000);
         });
 
-        // إغلاق الـ Modal عند النقر خارج المحتوى
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                closeModal();
-            }
+        // إغلاق المودال عند النقر في الخارج
+        window.addEventListener('click', (e) => {
+            if (e.target === authModal) closeAuthModal();
+            if (e.target === channelModal) closeChannelModal();
         });
 
         // --- نظام السلة ---
@@ -402,17 +545,17 @@
 
             cart.forEach(item => {
                 const div = document.createElement('div');
-                div.className = 'bg-gray-50 dark:bg-gray-800 p-4 rounded-xl flex flex-col gap-3 border border-gray-100 dark:border-gray-700';
+                div.className = 'bg-white/5 border border-white/10 p-4 rounded-xl flex flex-col gap-3';
                 
                 div.innerHTML = `
                     <div class="flex justify-between items-start">
-                        <div class="font-bold text-sm">${item.name}</div>
-                        <div class="text-blue-600 font-bold">$${item.price * item.qty}</div>
+                        <div class="font-bold text-sm text-white">${item.name}</div>
+                        <div class="text-[#00f2fe] font-black">$${item.price * item.qty}</div>
                     </div>
-                    <div class="flex items-center justify-between bg-white dark:bg-gray-900 rounded-lg p-1 border border-gray-100 dark:border-gray-700">
-                        <button onclick="decreaseQty(${item.id})" class="w-8 h-8 flex items-center justify-center hover:bg-red-100 hover:text-red-600 rounded-md transition"><i class="fa-solid fa-minus"></i></button>
+                    <div class="flex items-center justify-between bg-black/40 rounded-lg p-1 border border-white/5">
+                        <button onclick="decreaseQty(${item.id})" class="w-8 h-8 flex items-center justify-center hover:bg-red-500/20 text-red-400 rounded-md transition"><i class="fa-solid fa-minus"></i></button>
                         <span class="font-bold">${item.qty}</span>
-                        <button onclick="increaseQty(${item.id})" class="w-8 h-8 flex items-center justify-center hover:bg-green-100 hover:text-green-600 rounded-md transition"><i class="fa-solid fa-plus"></i></button>
+                        <button onclick="increaseQty(${item.id})" class="w-8 h-8 flex items-center justify-center hover:bg-green-500/20 text-green-400 rounded-md transition"><i class="fa-solid fa-plus"></i></button>
                     </div>
                 `;
                 cartItemsContainer.appendChild(div);
@@ -437,10 +580,8 @@
             message += "\nالرجاء تأكيد الطلب وتزويدي بتفاصيل الدفع.";
             
             const encodedMessage = encodeURIComponent(message);
-            // استخدام رابط القناة أو بوت الدعم الخاص بك
             window.open(`https://t.me/MadaraPUBGStore?text=${encodedMessage}`, '_blank', 'noopener,noreferrer');
         }
-
     </script>
 </body>
 </html>
