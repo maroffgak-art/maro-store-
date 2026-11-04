@@ -28,21 +28,68 @@
 
         <!-- إضافة منتج -->
         <div class="bg-slate-800 p-6 rounded-2xl mb-8">
-            <h2 class="text-xl font-bold mb-4">إضافة تطبيق / لعبة جديدة</h2>
+            <h2 class="text-xl font-bold mb-4">إضافة منتج جديد</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                
                 <select id="cat-id" class="p-3 rounded-lg bg-slate-900 border border-slate-700 text-white outline-none">
-                    <option value="games">قسم الألعاب</option>
-                    <option value="apps">قسم التطبيقات</option>
-                    <option value="subs">الاشتراكات</option>
+                    <option value="games">الألعاب</option>
+                    <option value="subscriptions">الاشتراكات</option>
+                    <option value="giftcards">البطاقات الرقمية</option>
+                    <option value="creative">التصميم</option>
+                    <option value="software">البرمجيات</option>
+                    <option value="tech">الخدمات التقنية</option>
+                    <option value="finance">الحوالات</option>
+                    <option value="support">خدمات متنوعة</option>
                 </select>
-                <input type="text" id="app-name" placeholder="اسم التطبيق (مثال: PUBG Mobile)" class="p-3 rounded-lg bg-slate-900 border border-slate-700 text-white outline-none">
-                <input type="text" id="app-img" placeholder="لينك صورة التطبيق (URL)" class="p-3 rounded-lg bg-slate-900 border border-slate-700 text-white outline-none">
-                <button onclick="addProduct()" class="bg-cyan-500 text-black font-bold py-3 rounded-lg hover:bg-cyan-400 transition">إضافة التطبيق</button>
+
+                <input type="text" id="app-name" placeholder="اسم المنتج" class="p-3 rounded-lg bg-slate-900 border border-slate-700 text-white outline-none">
+                
+                <input type="number" id="app-price" placeholder="السعر (مثال: 15)" class="p-3 rounded-lg bg-slate-900 border border-slate-700 text-white outline-none">
+                
+                <select id="price-mode" class="p-3 rounded-lg bg-slate-900 border border-slate-700 text-white outline-none">
+                    <option value="fixed">سعر ثابت</option>
+                    <option value="from">يبدأ من</option>
+                </select>
+
+                <input type="text" id="app-tag" placeholder="الشارة (مثال: شحن فوري، حسب الطلب)" class="p-3 rounded-lg bg-slate-900 border border-slate-700 text-white outline-none">
+                
+                <select id="app-icon" class="p-3 rounded-lg bg-slate-900 border border-slate-700 text-white outline-none">
+                    <option value="spark">أيقونة نجمة (Spark)</option>
+                    <option value="game">أيقونة ألعاب (Game)</option>
+                    <option value="play">أيقونة تشغيل (Play)</option>
+                    <option value="flame">أيقونة لهب (Flame)</option>
+                    <option value="screen">أيقونة شاشة (Screen)</option>
+                    <option value="bot">أيقونة بوت (Bot)</option>
+                    <option value="pen">أيقونة تصميم (Pen)</option>
+                    <option value="window">أيقونة برامج (Window)</option>
+                    <option value="gift">أيقونة هدايا (Gift)</option>
+                    <option value="wallet">أيقونة محفظة (Wallet)</option>
+                    <option value="code">أيقونة برمجة (Code)</option>
+                    <option value="shield">أيقونة حماية (Shield)</option>
+                </select>
+
+                <select id="app-art" class="p-3 rounded-lg bg-slate-900 border border-slate-700 text-white outline-none">
+                    <option value="art-games">خلفية ألعاب (أزرق غامق)</option>
+                    <option value="art-stream">خلفية ترفيه (بنفسجي)</option>
+                    <option value="art-shahid">خلفية ذهبية</option>
+                    <option value="art-bot">خلفية تكنولوجيا</option>
+                    <option value="art-design">خلفية إبداعية</option>
+                    <option value="art-software">خلفية برمجيات</option>
+                    <option value="art-gift">خلفية هدايا</option>
+                    <option value="art-money">خلفية أموال</option>
+                    <option value="art-web">خلفية ويب</option>
+                    <option value="art-support">خلفية دعم</option>
+                    <option value="art-extra">خلفية عامة</option>
+                </select>
+
+                <textarea id="app-desc" placeholder="وصف المنتج" class="p-3 rounded-lg bg-slate-900 border border-slate-700 text-white outline-none md:col-span-2" rows="2"></textarea>
+                
+                <button onclick="addProduct()" class="bg-cyan-500 text-black font-bold py-3 rounded-lg hover:bg-cyan-400 transition md:col-span-2">إضافة المنتج</button>
             </div>
         </div>
 
         <!-- قائمة المنتجات -->
-        <h2 class="text-xl font-bold mb-4">التطبيقات الحالية</h2>
+        <h2 class="text-xl font-bold mb-4">المنتجات الحالية</h2>
         <div id="products-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
     </div>
 
@@ -51,7 +98,7 @@
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // ⚠️ ضع كود Firebase الخاص بك هنا
+        // ⚠️ كود Firebase الخاص بك
         const firebaseConfig = {
             apiKey: "AIzaSyAZucoNuZyKDoxfS7tboc3-ZttqONuw_vw",
             authDomain: "maro-store-4dc09.firebaseapp.com",
@@ -65,7 +112,6 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // تسجيل الدخول
         window.login = () => {
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
@@ -77,10 +123,8 @@
                 });
         };
 
-        // تسجيل الخروج
         window.logout = () => signOut(auth);
 
-        // مراقبة حالة الدخول
         onAuthStateChanged(auth, user => {
             if (user) {
                 document.getElementById('login-section').classList.add('hidden');
@@ -92,31 +136,40 @@
             }
         });
 
-        // إضافة منتج للداتابيز
         window.addProduct = async () => {
-            const catId = document.getElementById('cat-id').value;
+            const categoryId = document.getElementById('cat-id').value;
             const name = document.getElementById('app-name').value;
-            const img = document.getElementById('app-img').value;
+            const price = parseFloat(document.getElementById('app-price').value);
+            const priceMode = document.getElementById('price-mode').value;
+            const tag = document.getElementById('app-tag').value;
+            const icon = document.getElementById('app-icon').value;
+            const art = document.getElementById('app-art').value;
+            const description = document.getElementById('app-desc').value;
 
-            if(!name || !img) return alert("يرجى ملء جميع الحقول");
+            if(!name || isNaN(price)) return alert("يرجى ملء اسم المنتج والسعر");
 
             try {
                 await addDoc(collection(db, "products"), {
-                    categoryId: catId,
+                    categoryId: categoryId,
                     name: name,
-                    img: img,
+                    price: price,
+                    priceMode: priceMode,
+                    tag: tag || "رقمي",
+                    icon: icon,
+                    art: art,
+                    description: description || "لا يوجد وصف.",
                     createdAt: Date.now()
                 });
-                alert("تم إضافة التطبيق بنجاح!");
+                alert("تم إضافة المنتج بنجاح!");
                 document.getElementById('app-name').value = '';
-                document.getElementById('app-img').value = '';
+                document.getElementById('app-price').value = '';
+                document.getElementById('app-desc').value = '';
                 loadProducts();
             } catch (e) {
                 alert("خطأ: " + e.message);
             }
         };
 
-        // تحميل المنتجات
         async function loadProducts() {
             const list = document.getElementById('products-list');
             list.innerHTML = 'جاري التحميل...';
@@ -128,14 +181,11 @@
                     const div = document.createElement('div');
                     div.className = 'bg-slate-800 p-4 rounded-xl flex justify-between items-center';
                     div.innerHTML = `
-                        <div class="flex items-center gap-4">
-                            <img src="${data.img}" class="w-12 h-12 object-contain bg-white rounded-lg p-1">
-                            <div>
-                                <div class="font-bold">${data.name}</div>
-                                <div class="text-xs text-slate-400">${data.categoryId}</div>
-                            </div>
+                        <div>
+                            <div class="font-bold">${data.name}</div>
+                            <div class="text-sm text-cyan-400">${data.price}$</div>
                         </div>
-                        <button onclick="deleteProduct('${document.id}')" class="text-red-500 hover:text-red-400"><i class="fa-solid fa-trash"></i> مسح</button>
+                        <button onclick="deleteProduct('${document.id}')" class="text-red-500 hover:text-red-400 bg-red-500/10 px-3 py-1 rounded-lg">مسح</button>
                     `;
                     list.appendChild(div);
                 });
@@ -144,9 +194,8 @@
             }
         }
 
-        // مسح منتج
         window.deleteProduct = async (id) => {
-            if(confirm("هل أنت متأكد من مسح هذا التطبيق؟")) {
+            if(confirm("هل أنت متأكد من مسح هذا المنتج؟")) {
                 await deleteDoc(doc(db, "products", id));
                 loadProducts();
             }
