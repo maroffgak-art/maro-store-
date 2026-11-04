@@ -27,7 +27,10 @@
             background-color: var(--bg-dark);
             color: #fff;
             overflow-x: hidden;
-            -webkit-user-select: none; /* منع تحديد النص */
+            
+            /* حماية متقدمة لمنع تحديد النص والنسخ على الآيفون والكمبيوتر */
+            -webkit-user-select: none; 
+            -webkit-touch-callout: none; /* السطر السحري لمنع قائمة النسخ في الآيفون */
             -moz-user-select: none;
             -ms-user-select: none;
             user-select: none;
@@ -380,7 +383,6 @@
                     const div = document.createElement('div');
                     div.className = 'glass-panel p-4 rounded-xl flex justify-between items-center';
                     
-                    // نستخدم textContent بدل innerHTML عشان نمنع أي كود خبيث يتنفذ
                     const textContainer = document.createElement('div');
                     textContainer.className = 'flex items-center gap-3';
                     textContainer.innerHTML = `<div class="w-10 h-10 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center"><i class="fa-solid fa-check"></i></div>`;
@@ -412,14 +414,10 @@
                     message += `- ${item}\n`;
                 });
                 
-                // تشفير الرسالة عشان نمنع أي حقن في اللينك
                 const encodedMessage = encodeURIComponent(message);
-                
-                // فتح تليجرام برسالة مشفرة
                 window.open(`https://t.me/qijub?text=${encodedMessage}`, '_blank', 'noopener,noreferrer');
             }
         } catch (error) {
-            // في حالة حدوث أي خطأ في الجافاسكريبت، يتم تسجيله بهدوء بدون تعطيل الموقع
             console.error("حدث خطأ غير متوقع، يرجى إعادة تحميل الصفحة.");
         }
     </script>
