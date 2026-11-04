@@ -523,4 +523,361 @@
         
         const total = cart.reduce((s, i) => s + (i.price * i.qty), 0);
         const totalEl = $('[data-cart-total]');
-        if (
+        if (totalEl) totalEl.textContent = `$${total}`;
+
+        const container = $('[data-cart-items]');
+        if (!container) return;
+        if (cart.length === 0) {
+            container.innerHTML = '<div class="drawer-empty">سلتك فارغة.</div>';
+        } else {
+            container.innerHTML = cart.map(i => `
+                <div class="cart-row">
+                    <div><p class="cart-row-title">${i.name}</p><div class="cart-row-price">$${i.price} × ${i.qty}</div></div>
+                    <div class="cart-row-controls"><span class="qty-value">${i.qty}</span></div>
+                </div>
+            `).join("");
+        }
+    }
+
+    window.filterCategory = (id) => {
+        currentFilter = id;
+        renderCategories();
+        renderProducts();
+        const prodSection = document.getElementById('products');
+        if (prodSection) prodSection.scrollIntoView({ behavior: 'smooth' });
+    };
+
+    function renderCategories() {
+        const tiles = $("[data-category-tiles]");
+        const chips = $("[data-filter-chips]");
+        if (!tiles || !chips) return;
+        
+        const displayCats = dynamicCategories.length > 0 ? dynamicCategories : defaultCategories;
+
+        tiles.innerHTML = displayCats.map(c => `
+            <button class="category-tile ${currentFilter === c.id ? 'is-active' : ''}" onclick="window.filterCategory('${c.id}')">
+                <span class="category-icon"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.7"/><rect x="14" y="4" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.7"/><rect x="4" y="14" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.7"/><rect x="14" y="14" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.7"/></svg></span>
+                <span><strong>${c.label}</strong></span>
+            </button>
+        `).join("");
+
+        chips.innerHTML = `<button class="filter-chip ${currentFilter === 'all' ? 'is-active' : ''}" onclick="window.filterCategory('all')">الكل</button>` + 
+            displayCats.map(c => `
+                <button class="filter-chip ${currentFilter === c.id ? 'is-active' : ''}" onclick="window.filterCategory('${c.id}')">${c.label}</button>
+            `).join("");
+    }
+
+    function renderProducts() {
+        const grid = $("[data-products-grid]");
+        if (!grid) return;
+        
+        let filtered = products;
+        
+        if (currentFilter !== "all") {
+            filtered = filtered.filter(p => p.category === currentFilter);
+        }
+        
+        if (searchQuery.trim() !== "") {
+            const q = searchQuery.toLowerCase();
+            filtered = filtered.filter(p => p.name.toLowerCase().includes(q) || p.description.toLowerCase().includes(q));
+        }
+        
+        if (filtered.length === 0) {
+            grid.innerHTML = '<div class="no-results">لا توجد منتجات مطابقة لبحثك أو في هذا القسم حالياً.</div>';
+            const rc = $("[data-result-count]");
+            if (rc) rc.textContent = "0 منتج";
+            return;
+        }
+
+        const rc = $("[data-result-count]");
+        if (rc) rc.textContent = `${filtered.length} منتج`;
+
+        grid.innerHTML = filtered.map(p => {
+            const catLabel = dynamicCategories.find(c => c.id === p.category)?.label || 
+                             defaultCategories.find(c => c.id === p.category)?.label || 
+                             "منتجات";
+            
+            const artContent = p.image 
+                ? `<img src="${p.image}" alt="${p.name}" loading="lazy">` 
+                : `<span class="product-illustration"><svg viewBox="0 0 24 24" fill="none"><path d="m12 3 1.6 6.4L20 11l-6.4 1.6L12 19l-1.6-6.4L4 11l6.4-1.6L12 3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></span>`;
+
+            return `
+            <article class="product-card">
+                <div class="product-art ${p.image ? '' : 'art-extra'}">
+                    ${artContent}
+                    <span class="art-label">MARO DIGITAL</span>
+                </div>
+                <div class="product-body">
+                    <div class="product-meta"><span class="product-category">${catLabel}</span><span class="product-status">${p.tag}</span></div>
+                    <h3 class="product-title">${p.name}</h3>
+                    <p class="product-desc">${p.description}</p>
+                    <div class="product-footer">
+                        <div><span class="price-label">${p.priceMode === 'from' ? 'يبدأ من' : 'السعر'}</span><span class="price">$${p.price}</span></div>
+                        <button class="add-button" onclick="window.addToCart('${p.id}', '${p.name.replace(/'/g, "\\'")}', ${p.price})"><svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>أضف للسلة</button>
+                    </div>
+                </div>
+            </article>
+        `}).join("");
+    }
+
+    // ==========================================
+    // 2. مستمعات الأحداث (Event Listeners) - مستقلة
+    // ==========================================
+    document.addEventListener("input", (e) => {
+        if (e.target.matches("[data-search-input]")) {
+            searchQuery = e.target.value;
+            $$("[data-search-input]").forEach(input => {
+                if (input !== e.target) input.value = searchQuery;
+            });
+            renderProducts();
+        }
+    });
+
+    document.addEventListener("click", (e) => {
+        // Theme Toggle
+        const themeBtn = e.target.closest("[data-theme-toggle]");
+        if (themeBtn) {
+            const html = document.documentElement;
+            const isDark = html.getAttribute("data-theme") === "dark";
+            html.setAttribute("data-theme", isDark ? "light" : "dark");
+            localStorage.setItem("theme", isDark ? "light" : "dark");
+            return;
+        }
+
+        // Search Toggle
+        const searchBtn = e.target.closest("[data-open-search]");
+        if (searchBtn) {
+            const ms = $("[data-mobile-search]");
+            if (ms) ms.classList.toggle("is-open");
+            return;
+        }
+
+        // Menu Toggle
+        const menuBtn = e.target.closest("[data-menu-toggle]");
+        if (menuBtn) {
+            const mp = $("[data-menu-panel]");
+            if (mp) mp.classList.toggle("is-open");
+            return;
+        }
+
+        // Close Menu when clicking a link inside
+        if (e.target.closest("[data-menu-panel] a, [data-menu-panel] button")) {
+            const mp = $("[data-menu-panel]");
+            if (mp) mp.classList.remove("is-open");
+        }
+
+        // Cart Open
+        if (e.target.closest("[data-open-cart]")) {
+            const cb = $("[data-cart-backdrop]");
+            if (cb) cb.classList.add("is-open");
+            return;
+        }
+
+        // Close buttons
+        if (e.target.closest("[data-close-cart]")) {
+            const cb = $("[data-cart-backdrop]");
+            if (cb) cb.classList.remove("is-open");
+            return;
+        }
+        if (e.target.closest("[data-close-account]")) {
+            const ab = $("[data-account-backdrop]");
+            if (ab) ab.classList.remove("is-open");
+            return;
+        }
+
+        // Checkout
+        if (e.target.closest("[data-checkout]")) {
+            if(!cart.length) return showToast("السلة فارغة!");
+            const total = cart.reduce((s, i) => s + (i.price * i.qty), 0);
+            let msg = "مرحباً MARO، أريد إتمام طلب:\n";
+            cart.forEach(i => msg += `- ${i.name} (${i.qty})\n`);
+            msg += `\nالمجموع: $${total}\nيرجى تأكيد الطلب.";
+            window.open(`https://t.me/${TELEGRAM_USERNAME}?text=${encodeURIComponent(msg)}`, '_blank');
+            setTimeout(() => {
+                window.location.href = `https://paypal.me/${PAYPAL_USERNAME}/${total}`;
+            }, 1000);
+            return;
+        }
+    });
+
+    // Load Theme
+    if (localStorage.getItem("theme") === "light") {
+        document.documentElement.setAttribute("data-theme", "light");
+    }
+
+    // Initial Render for UI
+    renderCategories();
+    renderProducts();
+
+    // ==========================================
+    // 3. إعداد Firebase والمصادقة (معزول في try/catch)
+    // ==========================================
+    const firebaseConfig = {
+        apiKey: "AIzaSyAZucoNuZyKDoxfS7tboc3-ZttqONuw_vw",
+        authDomain: "maro-store-4dc09.firebaseapp.com",
+        projectId: "maro-store-4dc09",
+        storageBucket: "maro-store-4dc09.firebasestorage.app",
+        messagingSenderId: "55163169834",
+        appId: "1:55163169834:web:48ba5eda57e23c41886753"
+    };
+
+    let app, db, auth, provider;
+
+    try {
+        app = initializeApp(firebaseConfig);
+        db = getFirestore(app);
+        auth = getAuth(app);
+        provider = new GoogleAuthProvider();
+        setPersistence(auth, browserLocalPersistence).catch(err => console.error("Persistence error:", err));
+        
+        // Auth Listeners
+        window.loginWithGoogle = () => {
+            signInWithRedirect(auth, provider).catch(err => alert("خطأ: " + err.message));
+        };
+
+        window.logoutUser = () => {
+            signOut(auth).then(() => {
+                showToast("تم تسجيل الخروج.");
+                const ab = $("[data-account-backdrop]");
+                if (ab) ab.classList.remove("is-open");
+            });
+        };
+
+        window.saveProfile = async () => {
+            const country = document.getElementById('profile-country').value;
+            const phone = document.getElementById('profile-phone').value;
+            const address = document.getElementById('profile-address').value;
+            
+            if (!phone || !address) return alert("يرجى إدخال رقم الموبايل والعنوان");
+
+            const user = auth.currentUser;
+            if (user) {
+                try {
+                    await setDoc(doc(db, "users", user.uid), {
+                        email: user.email, name: user.displayName, photoURL: user.photoURL,
+                        countryCode: country, phone: phone, address: address, createdAt: Date.now()
+                    });
+                    const pb = $("[data-profile-backdrop]");
+                    if (pb) pb.classList.remove("is-open");
+                    showToast("تم حفظ الملف الشخصي بنجاح!");
+                    updateAuthUI(user);
+                } catch (e) {
+                    alert("حدث خطأ أثناء الحفظ: " + e.message);
+                }
+            }
+        };
+
+        async function updateAuthUI(user) {
+            const menuLoginBtn = document.getElementById('menu-login-btn');
+            const accountContent = document.getElementById('account-modal-content');
+
+            if (user) {
+                const userDocRef = doc(db, "users", user.uid);
+                const userDoc = await getDoc(userDocRef);
+                
+                if (!userDoc.exists()) {
+                    const pb = $("[data-profile-backdrop]");
+                    if (pb) pb.classList.add("is-open");
+                    if (menuLoginBtn) menuLoginBtn.innerText = "استكمال الملف";
+                    return;
+                }
+
+                if (menuLoginBtn) {
+                    menuLoginBtn.innerText = `حسابي (${user.displayName ? user.displayName.split(' ')[0] : 'مستخدم'})`;
+                    menuLoginBtn.onclick = (e) => {
+                        e.preventDefault();
+                        const ab = $("[data-account-backdrop]");
+                        if (ab) ab.classList.add("is-open");
+                    };
+                    menuLoginBtn.style.color = "var(--green)";
+                }
+                
+                if (accountContent) {
+                    accountContent.innerHTML = `
+                        <div style="display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 20px;">
+                            <img src="${user.photoURL || ''}" style="width: 64px; height: 64px; border-radius: 50%; border: 2px solid var(--cyan);">
+                            <h3 style="font-weight: 700; font-size: 18px;">${user.displayName || 'مستخدم'}</h3>
+                            <p style="font-size: 13px; color: var(--muted);">${user.email}</p>
+                        </div>
+                        <button onclick="window.logoutUser()" class="button button-primary" style="width: 100%; background: var(--danger); color: white;">تسجيل الخروج</button>
+                    `;
+                }
+            } else {
+                if (menuLoginBtn) {
+                    menuLoginBtn.innerText = "تسجيل الدخول";
+                    menuLoginBtn.onclick = (e) => {
+                        e.preventDefault();
+                        window.loginWithGoogle();
+                    };
+                    menuLoginBtn.style.color = "var(--cyan)";
+                }
+                if (accountContent) {
+                    accountContent.innerHTML = `<p style="margin-bottom: 20px;">سجل دخولك باستخدام حساب Google لتجربة تسوق أسرع.</p>
+                    <button onclick="window.loginWithGoogle()" class="button button-primary" style="width: 100%;">تسجيل الدخول بجوجل</button>`;
+                }
+            }
+        }
+
+        getRedirectResult(auth).then((result) => {
+            if (result?.user) showToast("تم تسجيل الدخول بنجاح!");
+        }).catch((err) => console.error("Redirect Error:", err));
+
+        onAuthStateChanged(auth, (user) => {
+            updateAuthUI(user);
+        });
+
+        // Load Data from Firestore
+        async function loadCategories() {
+            try {
+                const querySnapshot = await getDocs(collection(db, "categories"));
+                dynamicCategories = [];
+                querySnapshot.forEach((docSnap) => {
+                    dynamicCategories.push({ id: docSnap.id, ...docSnap.data() });
+                });
+                dynamicCategories.sort((a,b) => (a.order || 0) - (b.order || 0));
+                renderCategories();
+            } catch (e) {
+                console.error("Error loading categories (Using defaults):", e);
+                dynamicCategories = defaultCategories;
+                renderCategories();
+            }
+        }
+
+        async function loadProducts() {
+            try {
+                const querySnapshot = await getDocs(collection(db, "products"));
+                products = [];
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    products.push({
+                        id: docSnap.id, 
+                        name: data.name || "منتج",
+                        category: data.categoryId || "support",
+                        price: Number(data.price) || 0, 
+                        priceMode: data.priceMode || "fixed",
+                        description: data.description || "", 
+                        image: data.image || "", 
+                        tag: data.tag || "رقمي"
+                    });
+                });
+                renderProducts();
+            } catch (e) { 
+                console.error("Error loading products:", e); 
+                const loadingText = document.getElementById('loading-text');
+                if (loadingText) {
+                    loadingText.innerText = "تعذر تحميل المنتجات. يرجى التأكد من صلاحيات قاعدة البيانات (Firestore Rules).";
+                    loadingText.style.color = "var(--danger)";
+                }
+            }
+        }
+
+        loadCategories();
+        loadProducts();
+
+    } catch (error) {
+        console.error("Firebase Initialization Failed:", error);
+        showToast("تعذر الاتصال بالخادم. الأزرار تعمل لكن المنتجات غير متاحة.");
+    }
+  </script>
+</body>
+</html>
