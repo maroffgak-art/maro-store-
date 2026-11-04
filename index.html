@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Maro | Premium Digital Store</title>
+    
+    <!-- سياسة الأمان CSP (تمنع حقن سكريبتات خارجية ضارة) -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://api.telegram.org;">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
@@ -23,9 +27,15 @@
             background-color: var(--bg-dark);
             color: #fff;
             overflow-x: hidden;
+            -webkit-user-select: none; /* منع تحديد النص */
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
-        /* خلفية شبكية مع إضاءة */
+        /* حماية إضافية للصور من السحب */
+        img { pointer-events: none; }
+
         .bg-grid-glow {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -47,7 +57,6 @@
             z-index: -1;
         }
 
-        /* زجاج ضبابي */
         .glass-panel {
             background: var(--card-bg);
             backdrop-filter: blur(16px);
@@ -55,7 +64,6 @@
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
-        /* تأثير 3D للكروت */
         .tilt-card {
             transition: transform 0.2s ease-out, box-shadow 0.3s ease;
             transform-style: preserve-3d;
@@ -65,7 +73,6 @@
             border-color: rgba(99, 102, 241, 0.4);
         }
         
-        /* لمعة الكارت */
         .tilt-card::before {
             content: "";
             position: absolute;
@@ -77,11 +84,8 @@
             transition: opacity 0.5s;
             border-radius: inherit;
         }
-        .tilt-card:hover::before {
-            opacity: 1;
-        }
+        .tilt-card:hover::before { opacity: 1; }
 
-        /* صورة الكارت */
         .card-icon {
             background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.02));
             border: 1px solid rgba(255,255,255,0.1);
@@ -93,7 +97,6 @@
             color: white;
         }
 
-        /* الزرار النيون */
         .btn-neon {
             background: transparent;
             border: 1px solid var(--primary);
@@ -107,8 +110,7 @@
             color: #fff;
             box-shadow: 0 0 15px var(--primary-glow);
         }
-
-        /* سكرول بار مخصص */
+        
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: var(--bg-dark); }
         ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
@@ -121,10 +123,8 @@
     <div class="bg-glow-1"></div>
     <div class="bg-glow-2"></div>
 
-    <!-- الهيدر -->
     <header class="fixed top-0 w-full z-50 glass-panel border-b border-white/5 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <!-- اللوجو -->
             <a href="#" class="text-2xl font-black tracking-tighter flex items-center gap-2">
                 <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/30">
                     <i class="fa-solid fa-bolt text-white text-sm"></i>
@@ -132,27 +132,24 @@
                 Maro<span class="text-indigo-500">.</span>
             </a>
             
-            <!-- روابط الكمبيوتر -->
             <nav class="hidden md:flex gap-8 font-bold text-gray-400 text-sm">
                 <a href="#home" class="text-white transition">الرئيسية</a>
                 <a href="#categories" class="hover:text-white transition">الفئات</a>
                 <a href="#contact" class="hover:text-white transition">الدعم الفني</a>
             </nav>
             
-            <!-- السلة والبروفايل -->
             <div class="flex items-center gap-4">
                 <button onclick="toggleCart()" class="relative w-10 h-10 rounded-full glass-panel flex items-center justify-center hover:bg-white/10 transition group">
                     <i class="fa-solid fa-cart-shopping text-gray-300 group-hover:text-white transition"></i>
                     <span id="cart-count" class="absolute -top-1 -right-1 w-5 h-5 bg-indigo-500 text-white text-xs font-bold flex items-center justify-center rounded-full shadow-lg shadow-indigo-500/50">0</span>
                 </button>
-                <a href="https://t.me/qijub" target="_blank" class="hidden md:flex btn-neon px-6 py-2 rounded-full font-bold text-sm items-center gap-2">
+                <a href="https://t.me/qijub" target="_blank" rel="noopener noreferrer" class="hidden md:flex btn-neon px-6 py-2 rounded-full font-bold text-sm items-center gap-2">
                     <i class="fa-brands fa-telegram"></i> تواصل
                 </a>
             </div>
         </div>
     </header>
 
-    <!-- قسم الترحيب (Hero) -->
     <section id="home" class="pt-32 pb-20 px-6 relative z-10">
         <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
             <div class="text-center md:text-right">
@@ -170,42 +167,27 @@
                     <a href="#categories" class="btn-neon px-8 py-3 rounded-xl font-bold flex items-center justify-center gap-2">
                         تصفح المتجر <i class="fa-solid fa-arrow-left"></i>
                     </a>
-                    <a href="https://t.me/qijub" target="_blank" class="glass-panel px-8 py-3 rounded-xl font-bold text-white hover:bg-white/10 transition flex items-center justify-center gap-2">
+                    <a href="https://t.me/qijub" target="_blank" rel="noopener noreferrer" class="glass-panel px-8 py-3 rounded-xl font-bold text-white hover:bg-white/10 transition flex items-center justify-center gap-2">
                         <i class="fa-brands fa-telegram text-blue-400"></i> الدعم المباشر
                     </a>
                 </div>
             </div>
             
-            <!-- صورة توضيحية -->
             <div class="relative hidden md:block perspective-1000">
                 <div class="w-full h-[400px] rounded-3xl glass-panel overflow-hidden relative group transform rotate-y-12 rotate-x-6 hover:rotate-0 transition duration-700 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
-                    <img src="https://images.unsplash.com/photo-1614680376573-df3480f0c6ff?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover opacity-60 group-hover:scale-110 transition duration-700">
+                    <img src="https://images.unsplash.com/photo-1614680376573-df3480f0c6ff?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover opacity-60 group-hover:scale-110 transition duration-700" alt="Store Banner">
                     <div class="absolute inset-0 bg-gradient-to-t from-[#09090b] via-transparent to-transparent"></div>
-                    <div class="absolute bottom-6 right-6 left-6">
-                        <div class="glass-panel p-4 rounded-xl flex items-center justify-between border-white/10">
-                            <div>
-                                <div class="text-white font-bold text-lg">باقة الألعاب VIP</div>
-                                <div class="text-gray-400 text-sm">شحن فوري وتلقائي</div>
-                            </div>
-                            <div class="text-indigo-400 font-black text-2xl">$50</div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- قسم الفئات (Categories) -->
     <section id="categories" class="py-20 px-6 relative z-10">
         <div class="max-w-7xl mx-auto">
             <div class="flex justify-between items-end mb-12">
                 <div>
                     <h2 class="text-3xl font-black mb-2">تصفح <span class="text-indigo-500">الأقسام</span></h2>
                     <p class="text-gray-400">اختر ما يناسبك من باقاتنا المتنوعة</p>
-                </div>
-                <div class="hidden md:flex gap-2">
-                    <button class="w-10 h-10 rounded-full glass-panel flex items-center justify-center hover:bg-indigo-500 transition"><i class="fa-solid fa-chevron-right"></i></button>
-                    <button class="w-10 h-10 rounded-full glass-panel flex items-center justify-center hover:bg-indigo-500 transition"><i class="fa-solid fa-chevron-left"></i></button>
                 </div>
             </div>
 
@@ -262,47 +244,19 @@
                         <i class="fa-solid fa-plus text-gray-500 group-hover:text-white transition"></i>
                     </div>
                 </div>
-                
-                <!-- كارت 5 -->
-                <div class="tilt-card glass-panel rounded-2xl p-6 relative group cursor-pointer" onmousemove="handleTilt(event, this)" onmouseleave="resetTilt(this)" onclick="addToCart('حسابات جاهزة')">
-                    <div class="w-14 h-14 rounded-xl card-icon flex items-center justify-center text-2xl text-purple-400 mb-6 relative z-10">
-                        <i class="fa-solid fa-users"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-1 relative z-10">حسابات جاهزة</h3>
-                    <p class="text-gray-400 text-sm mb-4 relative z-10">حسابات قديمة ومضمونة</p>
-                    <div class="flex items-center justify-between relative z-10">
-                        <span class="text-xs font-bold text-purple-400 bg-purple-500/10 px-3 py-1 rounded-full">عروض خاصة</span>
-                        <i class="fa-solid fa-plus text-gray-500 group-hover:text-white transition"></i>
-                    </div>
-                </div>
-
-                <!-- كارت 6 -->
-                <div class="tilt-card glass-panel rounded-2xl p-6 relative group cursor-pointer" onmousemove="handleTilt(event, this)" onmouseleave="resetTilt(this)" onclick="addToCart('بطاقات الهدايا')">
-                    <div class="w-14 h-14 rounded-xl card-icon flex items-center justify-center text-2xl text-yellow-400 mb-6 relative z-10">
-                        <i class="fa-solid fa-gift"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-1 relative z-10">بطاقات الهدايا</h3>
-                    <p class="text-gray-400 text-sm mb-4 relative z-10">جوجل بلاي، آيتونز، ستيم</p>
-                    <div class="flex items-center justify-between relative z-10">
-                        <span class="text-xs font-bold text-yellow-400 bg-yellow-500/10 px-3 py-1 rounded-full">تسليم كود</span>
-                        <i class="fa-solid fa-plus text-gray-500 group-hover:text-white transition"></i>
-                    </div>
-                </div>
             </div>
         </div>
     </section>
 
-    <!-- قسم التواصل -->
     <section id="contact" class="py-20 px-6 relative z-10">
         <div class="max-w-4xl mx-auto glass-panel rounded-3xl p-10 md:p-16 text-center relative overflow-hidden">
-            <!-- تأثير إضاءة خلفية -->
             <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-64 h-64 bg-indigo-500 rounded-full blur-[100px] opacity-20"></div>
             
             <h2 class="text-3xl md:text-5xl font-black mb-4 relative z-10">تحتاج مساعدة؟</h2>
             <p class="text-gray-400 mb-10 text-lg relative z-10">فريقنا جاهز للرد على استفساراتك وتنفيذ طلباتك على مدار الساعة.</p>
             
             <div class="flex flex-col sm:flex-row justify-center gap-4 relative z-10">
-                <a href="https://t.me/qijub" target="_blank" class="bg-[#0088cc] hover:bg-[#00aced] text-white px-8 py-4 rounded-xl font-bold flex items-center justify-center gap-3 transition shadow-[0_0_20px_rgba(0,136,204,0.4)]">
+                <a href="https://t.me/qijub" target="_blank" rel="noopener noreferrer" class="bg-[#0088cc] hover:bg-[#00aced] text-white px-8 py-4 rounded-xl font-bold flex items-center justify-center gap-3 transition shadow-[0_0_20px_rgba(0,136,204,0.4)]">
                     <i class="fa-brands fa-telegram text-2xl"></i> تواصل عبر تليجرام
                 </a>
                 <a href="tel:+962795230369" class="glass-panel hover:bg-white/10 text-white px-8 py-4 rounded-xl font-bold flex items-center justify-center gap-3 transition" dir="ltr">
@@ -312,12 +266,10 @@
         </div>
     </section>
 
-    <!-- الفوتر -->
     <footer class="border-t border-white/5 py-8 text-center text-gray-500 text-sm relative z-10">
-        <p>© 2024 Maro Store. صُنع بكل احترافية.</p>
+        <p>© 2024 Maro Store. جميع الحقوق محفوظة.</p>
     </footer>
 
-    <!-- الشريط السفلي (للموبايل فقط) -->
     <nav class="md:hidden fixed bottom-0 w-full glass-panel border-t border-white/10 flex justify-around items-center py-3 px-2 z-50 rounded-t-2xl">
         <a href="#home" class="flex flex-col items-center text-indigo-400 gap-1">
             <i class="fa-solid fa-house text-lg"></i>
@@ -332,20 +284,18 @@
             <span class="text-[10px] font-bold">السلة</span>
             <span id="cart-count-mobile" class="absolute top-0 right-2 w-4 h-4 bg-indigo-500 text-white text-[9px] font-bold flex items-center justify-center rounded-full">0</span>
         </button>
-        <a href="https://t.me/qijub" target="_blank" class="flex flex-col items-center text-gray-400 hover:text-[#0088cc] transition gap-1">
+        <a href="https://t.me/qijub" target="_blank" rel="noopener noreferrer" class="flex flex-col items-center text-gray-400 hover:text-[#0088cc] transition gap-1">
             <i class="fa-brands fa-telegram text-lg"></i>
             <span class="text-[10px] font-bold">تواصل</span>
         </a>
     </nav>
 
-    <!-- نافذة السلة الجانبية -->
     <div id="cart-drawer" class="fixed inset-y-0 right-0 w-full md:w-96 bg-[#09090b] border-l border-white/10 z-[100] transform translate-x-full transition-transform duration-300 ease-in-out shadow-2xl flex flex-col">
         <div class="p-6 border-b border-white/10 flex justify-between items-center bg-white/5">
             <h3 class="text-xl font-bold flex items-center gap-2"><i class="fa-solid fa-cart-shopping text-indigo-500"></i> سلة المشتريات</h3>
             <button onclick="toggleCart()" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-red-500 transition"><i class="fa-solid fa-xmark"></i></button>
         </div>
         <div id="cart-items" class="flex-1 p-6 overflow-y-auto flex flex-col gap-4">
-            <!-- سيتم إضافة العناصر هنا بالجافاسكريبت -->
             <div class="text-center text-gray-500 mt-10">السلة فارغة حالياً</div>
         </div>
         <div class="p-6 border-t border-white/10 bg-white/5">
@@ -355,92 +305,122 @@
     </div>
 
     <script>
-        // 1. تأثير 3D للكروت
-        function handleTilt(e, card) {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            // تحديث المتغيرات للخلفية اللامعة
-            card.style.setProperty('--mouse-x', `${x}px`);
-            card.style.setProperty('--mouse-y', `${y}px`);
-
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-            
-            const rotateX = ((y - centerY) / centerY) * -10;
-            const rotateY = ((x - centerX) / centerX) * 10;
-
-            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+        // حماية من فتح الـ Developer Tools والكليك يمين (تأثير نفسي)
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.onkeydown = function(e) {
+            if(e.keyCode == 123) { return false; } // منع F12
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) { return false; } // منع Ctrl+Shift+I
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) { return false; } // منع Ctrl+Shift+C
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) { return false; } // منع Ctrl+Shift+J
+            if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) { return false; } // منع Ctrl+U (عرض المصدر)
         }
 
-        function resetTilt(card) {
-            card.style.transform = `perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)`;
-        }
+        try {
+            function handleTilt(e, card) {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
 
-        // 2. نظام السلة
-        let cart = [];
-        const cartDrawer = document.getElementById('cart-drawer');
-        const cartItemsContainer = document.getElementById('cart-items');
-        const cartCountElements = [document.getElementById('cart-count'), document.getElementById('cart-count-mobile')];
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = ((y - centerY) / centerY) * -10;
+                const rotateY = ((x - centerX) / centerX) * 10;
 
-        function toggleCart() {
-            cartDrawer.classList.toggle('translate-x-full');
-        }
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+            }
 
-        function addToCart(itemName) {
-            if(!cart.includes(itemName)) {
-                cart.push(itemName);
+            function resetTilt(card) {
+                card.style.transform = `perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)`;
+            }
+
+            let cart = [];
+            const cartDrawer = document.getElementById('cart-drawer');
+            const cartItemsContainer = document.getElementById('cart-items');
+            const cartCountElements = [document.getElementById('cart-count'), document.getElementById('cart-count-mobile')];
+
+            function toggleCart() {
+                cartDrawer.classList.toggle('translate-x-full');
+            }
+
+            // منع حقن الـ XSS
+            function sanitizeInput(str) {
+                const temp = document.createElement('div');
+                temp.textContent = str;
+                return temp.innerHTML;
+            }
+
+            function addToCart(itemName) {
+                const safeItem = sanitizeInput(itemName);
+                if(!cart.includes(safeItem)) {
+                    cart.push(safeItem);
+                    updateCartUI();
+                    cartDrawer.classList.remove('translate-x-full');
+                }
+            }
+
+            function removeFromCart(itemName) {
+                cart = cart.filter(item => item !== itemName);
                 updateCartUI();
-                // تأثير بصري سريع
-                cartDrawer.classList.remove('translate-x-full');
-            }
-        }
-
-        function removeFromCart(itemName) {
-            cart = cart.filter(item => item !== itemName);
-            updateCartUI();
-        }
-
-        function updateCartUI() {
-            // تحديث الأرقام
-            cartCountElements.forEach(el => el.innerText = cart.length);
-            
-            // تحديث القائمة
-            cartItemsContainer.innerHTML = '';
-            if (cart.length === 0) {
-                cartItemsContainer.innerHTML = '<div class="text-center text-gray-500 mt-10">السلة فارغة حالياً</div>';
-                return;
             }
 
-            cart.forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'glass-panel p-4 rounded-xl flex justify-between items-center';
-                div.innerHTML = `
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center">
-                            <i class="fa-solid fa-check"></i>
-                        </div>
-                        <span class="font-bold">${item}</span>
-                    </div>
-                    <button onclick="removeFromCart('${item}')" class="text-red-400 hover:text-red-500 transition"><i class="fa-solid fa-trash"></i></button>
-                `;
-                cartItemsContainer.appendChild(div);
-            });
-        }
+            function updateCartUI() {
+                cartCountElements.forEach(el => el.innerText = cart.length);
+                cartItemsContainer.innerHTML = '';
+                
+                if (cart.length === 0) {
+                    cartItemsContainer.innerHTML = '<div class="text-center text-gray-500 mt-10">السلة فارغة حالياً</div>';
+                    return;
+                }
 
-        function checkout() {
-            if(cart.length === 0) {
-                alert("السلة فارغة! اختر قسم أولاً.");
-                return;
+                cart.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'glass-panel p-4 rounded-xl flex justify-between items-center';
+                    
+                    // نستخدم textContent بدل innerHTML عشان نمنع أي كود خبيث يتنفذ
+                    const textContainer = document.createElement('div');
+                    textContainer.className = 'flex items-center gap-3';
+                    textContainer.innerHTML = `<div class="w-10 h-10 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center"><i class="fa-solid fa-check"></i></div>`;
+                    
+                    const span = document.createElement('span');
+                    span.className = 'font-bold';
+                    span.textContent = item; // آمن
+                    
+                    textContainer.appendChild(span);
+                    
+                    const btn = document.createElement('button');
+                    btn.className = 'text-red-400 hover:text-red-500 transition';
+                    btn.innerHTML = '<i class="fa-solid fa-trash"></i>';
+                    btn.onclick = () => removeFromCart(item);
+
+                    div.appendChild(textContainer);
+                    div.appendChild(btn);
+                    cartItemsContainer.appendChild(div);
+                });
             }
-            let message = "مرحباً مارو، أريد طلب الخدمات التالية:%0A";
-            cart.forEach((item, index) => {
-                message += `- ${item}%0A`;
-            });
-            
-            // فتح تليجرام برسالة جاهزة
-            window.open(`https://t.me/qijub?text=${message}`, '_blank');
+
+            function checkout() {
+                if(cart.length === 0) {
+                    alert("السلة فارغة! اختر قسم أولاً.");
+                    return;
+                }
+                let message = "مرحباً مارو، أريد طلب الخدمات التالية:\n";
+                cart.forEach((item, index) => {
+                    message += `- ${item}\n`;
+                });
+                
+                // تشفير الرسالة عشان نمنع أي حقن في اللينك
+                const encodedMessage = encodeURIComponent(message);
+                
+                // فتح تليجرام برسالة مشفرة
+                window.open(`https://t.me/qijub?text=${encodedMessage}`, '_blank', 'noopener,noreferrer');
+            }
+        } catch (error) {
+            // في حالة حدوث أي خطأ في الجافاسكريبت، يتم تسجيله بهدوء بدون تعطيل الموقع
+            console.error("حدث خطأ غير متوقع، يرجى إعادة تحميل الصفحة.");
         }
     </script>
 </body>
